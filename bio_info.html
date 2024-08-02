@@ -15,19 +15,6 @@
     <link rel="stylesheet" href="assets/css/Bold-BS4-CSS-Image-Slider.css">
     <link rel="stylesheet" href="assets/css/Contact-Details-icons.css">
     <link rel="stylesheet" href="assets/css/pikaday.min.css">
-    <style>
-        /* CSS for scroll-down transition */
-        .scroll-down {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .scroll-down.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
 </head>
 
 <body>
@@ -64,6 +51,12 @@
                 <p style="margin-right: -10px;"><sub>Participante de Lobo Hacktoon (BUAP)&nbsp;</sub><br><sub>Finalista del Track Notion con Check Driver -&nbsp;2024</sub><br><br><sub>Participante de Hack de Morelos (Tec de Monterrey)&nbsp;</sub><br><sub>Track Salud con ConnectiDoc - 2024</sub></p>
             </div>
             <div class="col-md-3">
+                <p>Eventos&nbsp;</p>
+                <p><sub>LOBO HACK </sub><br><sub>BUAP&nbsp; -&nbsp; 2024</sub></p>
+                <p><sub>HACK MORELOS</sub><br><sub>Tec de Monterrey -&nbsp; 2024</sub></p>
+                <p><sub>Talent Land</sub><br><sub>Guadalajara -&nbsp; 2025</sub></p>
+            </div> 
+            <div class="col-md-3">
                 <p>Skills</p>
                 <p><sub>Certificado de Principiante en Programación&nbsp;</sub><br><sub>Alura Latam -&nbsp; 2023</sub></p>
                 <p><sub>Certificado Designer UX&nbsp;</sub><br><sub>Google -&nbsp; Cursando</sub></p>
@@ -71,17 +64,11 @@
                 <p><sub>Certificado de Redes Neuronales Artificiales&nbsp;</sub><br><sub>BUAP -&nbsp; En espera</sub></p>
                 <p><sub>Certificado de Redes Neuronales Artificiales + ARTE&nbsp;</sub><br><sub>BUAP -&nbsp; En espera</sub></p>
             </div>
-            <div class="col-md-3">
-                <p>Eventos&nbsp;</p>
-                <p><sub>LOBO HACK </sub><br><sub>BUAP&nbsp; -&nbsp; 2024</sub></p>
-                <p><sub>HACK MORELOS</sub><br><sub>Tec de Monterrey -&nbsp; 2024</sub></p>
-                <p><sub>Talent Land</sub><br><sub>Guadalajara -&nbsp; 2025</sub></p>
-            </div>
         </div>
     </div><!-- End: 1 Row 4 Columns -->
     <div class="container">
         <!-- Start: Contact Details -->
-        <section class="position-relative py-4 py-xl-5 scroll-down" id="contact-section">
+        <section class="position-relative py-4 py-xl-5">
             <div class="container position-relative" style="margin-top: 53px;">
                 <div class="row mb-5">
                     <div class="col-md-8 col-xl-6 text-center mx-auto">
@@ -136,18 +123,6 @@
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js" type="module"></script>
     <script src="assets/js/pikaday.min.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script>
-        // JavaScript for scroll-down transition
-        document.addEventListener("scroll", function () {
-            var scrollPosition = window.scrollY || document.documentElement.scrollTop;
-            var contactSection = document.getElementById("contact-section");
-            if (scrollPosition > 100) {
-                contactSection.classList.add("show");
-            } else {
-                contactSection.classList.remove("show");
-            }
-        });
-    </script>
 </body>
 
 </html>
