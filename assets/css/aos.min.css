@@ -953,3 +953,61 @@
   transform: perspective(2500px) rotateX(0);
 }
 
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.navbar-nav {
+  justify-content: center;
+  width: 100%;
+}
+
+.portfolio-block {
+  padding: 0 15px;
+  margin: 0 auto;
+}
+
+.fbox3 .col-sm-4 {
+  padding: 15px;
+}
+
+.project-sidebar-card,
+.project-compact-grid {
+  margin-bottom: 20px;
+}
+
+.social-icons a {
+  margin-right: 10px;
+}
+
+.work-experience .row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+footer .links a {
+  margin: 0 10px;
+}
+
+.avatar {
+  background-position: center;
+  background-size: cover;
+  width: 100px;
+  height: 100px;
+  margin: 10px auto;
+}
+
+@media (min-width: 768px) {
+  .center-content {
+      flex-direction: row;
+  }
+
+  .work-experience .row {
+      flex-direction: row;
+  }
+}
