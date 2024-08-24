@@ -2,12 +2,6 @@
   object-fit: cover;
 }
 
-source {
-}
-
-title {
-}
-
 .center-content {
   display: flex;
   justify-content: center;
