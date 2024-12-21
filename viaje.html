@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html data-bs-theme="light">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Viajes</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="assets/css/bs-theme-overrides.css">
+    <link rel="stylesheet" href="assets/css/aos.min.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="assets/css/Banner-Heading-Image-images.css">
+    <link rel="stylesheet" href="assets/css/Basic-fancyBox-Gallery-v2.css">
+    <link rel="stylesheet" href="assets/css/Bold-BS4-CSS-Image-Slider.css">
+    <link rel="stylesheet" href="assets/css/Contact-Details-icons.css">
+    <link rel="stylesheet" href="assets/css/pikaday.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        #globe-container {
+            width: 100%;
+            height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            #globe-container {
+                height: 300px;
+            }
+        }
+
+        .image-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .image-container img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top portfolio-navbar gradient navbar-dark" data-aos="fade-right" data-aos-duration="500" data-aos-delay="50">
+        <div class="container">
+            <a class="navbar-brand logo" href="index.html">Blog of Chasee</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Biografía</a></li>
+                    <li class="nav-item"><a class="nav-link" href="proyectos.html">Proyectos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="eventos.html">Eventos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="redes.html">Redes</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page" style="margin-top: 70px;">
+        <section class="portfolio-block projects-cards">
+            <div class="container">
+                <div class="heading">
+                    <h2>Viajes Tecnológicos</h2>
+                    <p>Explora los lugares que he visitado gracias a la tecnología.</p>
+                </div>
+                <div id="globe-container"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="page-footer py-3 border-top">
+        <div class="container my-4" data-aos="fade" data-aos-duration="200" data-aos-delay="50">
+            <div class="links">
+                <a data-aos="fade-down" data-aos-duration="200" data-aos-delay="50" href="index.html">Sobre mí</a>
+                <a data-aos="fade-down" data-aos-duration="250" data-aos-delay="100" href="bio_info.html">Contáctame</a>
+                <a data-aos="fade-down" data-aos-duration="300" data-aos-delay="150" href="proyectos.html">Proyectos</a>
+            </div>
+            <div class="social-icons">
+                <a class="me-3" href="https://www.facebook.com/profile.php?id=61554865336016&mibextid=LQQJ4d"><i class="icon ion-social-facebook"></i></a>
+                <a class="me-3" href="https://www.instagram.com/joseraul__?igsh=MTJjY3NqOG04ZWRveQ%3D%3D&utm_source=qr"><i class="icon ion-social-instagram-outline"></i></a>
+                <a class="me-3" href="https://www.linkedin.com/in/jos%C3%A9-ra%C3%BAl-programador?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"><i class="icon ion-social-linkedin-outline"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/aos.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js" defer></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/bootstrap/js/viajes.js"></script>
+</body>
+
+</html>

@@ -28,9 +28,19 @@
 .project-compact-grid {
   margin-bottom: 20px;
 }
-
 .social-icons a {
-  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px; /* Ajusta según sea necesario */
+  height: 40px; /* Ajusta según sea necesario */
+  border-radius: 50%; /* Círculo */
+  background-color: rgba(0, 126, 252, 0.1); /* Fondo opcional */
+  margin: 0 5px; /* Espaciado entre íconos */
+}
+
+.social-icons a:hover {
+  background-color: rgba(0, 126, 252, 0.2); /* Efecto hover opcional */
 }
 
 .work-experience .row {
