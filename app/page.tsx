@@ -1,103 +1,72 @@
 import Link from "next/link";
-import { ArrowRight, Hourglass } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { AsciiLogo } from "@/components/retro/ascii-logo";
+import { Typewriter } from "@/components/retro/typewriter";
+import { PromptLine, TerminalWindow } from "@/components/retro/terminal-window";
 
-const secciones = [
-  {
-    href: "/bio",
-    title: "Bio",
-    description: "Quién soy, de dónde vengo y hacia dónde voy.",
-  },
-  {
-    href: "/proyectos",
-    title: "Proyectos",
-    description: "Lo que he construido: código, hardware e ideas.",
-  },
-  {
-    href: "/eventos",
-    title: "Eventos",
-    description: "Hackathons, conferencias y momentos que marcaron el camino.",
-  },
-  {
-    href: "/viajes",
-    title: "Viajes",
-    description: "Viajando por el mundo, ahora con mapa propio.",
-  },
+const comandos = [
+  { href: "/bio", cmd: "cd ~/bio", desc: "quién soy, de dónde vengo" },
+  { href: "/proyectos", cmd: "cd ~/proyectos", desc: "lo que he construido" },
+  { href: "/eventos", cmd: "cd ~/eventos", desc: "hackathons y conciertos" },
+  { href: "/viajes", cmd: "cd ~/viajes", desc: "viajando por el mundo" },
+  { href: "/recuerdos", cmd: "cd ~/recuerdos", desc: "el timeline del legado" },
+  { href: "/privado", cmd: "sudo cd ~/privado", desc: "requiere contraseña" },
 ];
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-5xl px-4">
-      <section className="flex flex-col items-start gap-6 py-20 sm:py-28">
-        <Badge variant="secondary">Legado digital · desde 2021</Badge>
-        <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-          Los recuerdos de José Raúl Soriano, en digital.
-        </h1>
-        <p className="max-w-xl text-lg text-muted-foreground">
-          Este no es solo un blog: es una línea de tiempo de proyectos,
-          eventos, viajes y momentos — lo que quiero que trascienda.
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:py-16">
+      <AsciiLogo className="mb-6" />
+
+      <div className="mb-10 space-y-1.5 text-sm sm:text-base">
+        <PromptLine command="whoami" />
+        <p className="text-foreground/90">
+          José Raúl Soriano · estudiante de TI · coleccionista de recuerdos
         </p>
-        <div className="flex flex-wrap gap-3">
-          <Button
-            render={
-              <Link href="/recuerdos">
-                Explorar recuerdos <ArrowRight className="h-4 w-4" />
-              </Link>
-            }
+        <PromptLine command="cat lema.txt" />
+        <p className="terminal-glow text-primary">
+          <Typewriter
+            text='"Sin sacrificio no hay victoria." — legado digital desde 2021'
+            startDelay={400}
           />
-          <Button
-            variant="outline"
-            render={
-              <a href="/2021/index.html">
-                <Hourglass className="h-4 w-4" /> Cápsula del tiempo: 2021
-              </a>
-            }
-          />
-        </div>
-      </section>
+        </p>
+      </div>
 
-      <section className="grid gap-4 pb-20 sm:grid-cols-2">
-        {secciones.map((s) => (
-          <Link key={s.href} href={s.href} className="group">
-            <Card className="h-full transition-colors group-hover:border-foreground/20">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  {s.title}
-                  <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
-                </CardTitle>
-                <CardDescription>{s.description}</CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
-        ))}
-      </section>
-
-      <section className="pb-24">
-        <Card className="border-dashed">
-          <CardHeader>
-            <CardTitle className="text-base">🕰️ La primera pieza del legado</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
-            La versión 2021 de este blog se conserva intacta, tal como era:
-            Bootstrap, jQuery y todo.{" "}
-            <a
-              href="/2021/index.html"
-              className="font-medium text-foreground underline underline-offset-4"
+      <TerminalWindow title="menu — elige tu destino" className="mb-8">
+        <nav className="space-y-2.5">
+          {comandos.map((c) => (
+            <Link
+              key={c.href}
+              href={c.href}
+              className="group flex flex-wrap items-baseline gap-x-3 gap-y-0.5"
             >
-              Visítala aquí
-            </a>
-            .
-          </CardContent>
-        </Card>
-      </section>
+              <span className="text-accent">&gt;</span>
+              <span className="terminal-glow text-primary underline-offset-4 group-hover:underline">
+                {c.cmd}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                # {c.desc}
+              </span>
+            </Link>
+          ))}
+        </nav>
+      </TerminalWindow>
+
+      <TerminalWindow title="cápsula del tiempo">
+        <p className="mb-3 text-sm leading-6 text-foreground/80">
+          La versión 2021 de este blog se conserva intacta, tal como era:
+          Bootstrap, jQuery y todo. La primera pieza del legado.
+        </p>
+        <p className="text-sm">
+          <span className="text-accent">&gt;</span>{" "}
+          <a
+            href="/2021/index.html"
+            className="terminal-glow text-primary underline-offset-4 hover:underline"
+          >
+            open /2021/index.html
+          </a>{" "}
+          <span className="text-muted-foreground"># 🕰️ viajar a 2021</span>
+        </p>
+      </TerminalWindow>
     </div>
   );
 }

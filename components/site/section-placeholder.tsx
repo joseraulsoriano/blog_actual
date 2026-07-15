@@ -1,5 +1,4 @@
-import { Construction } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { PromptLine, TerminalWindow } from "@/components/retro/terminal-window";
 
 export function SectionPlaceholder({
   title,
@@ -11,14 +10,15 @@ export function SectionPlaceholder({
   fase: string;
 }) {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-20">
-      <div className="flex flex-col items-start gap-4">
-        <Badge variant="outline">
-          <Construction className="h-3 w-3" /> En construcción · {fase}
-        </Badge>
-        <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-        <p className="max-w-xl text-muted-foreground">{description}</p>
-      </div>
+    <div className="mx-auto max-w-3xl px-4 py-16">
+      <PromptLine command={`cd ~/${title.toLowerCase()}`} className="mb-4" />
+      <TerminalWindow title={`${title.toLowerCase()} — en construcción`}>
+        <p className="mb-2 text-sm text-destructive">
+          bash: {title.toLowerCase()}: directorio en construcción ({fase})
+        </p>
+        <p className="leading-7 text-foreground/80">{description}</p>
+        <p className="cursor-blink mt-4 text-muted-foreground" aria-hidden />
+      </TerminalWindow>
     </div>
   );
 }
