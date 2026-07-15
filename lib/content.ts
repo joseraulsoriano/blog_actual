@@ -49,6 +49,22 @@ export function getEntry<T>(dir: string, slug: string): Entry<T> | null {
   return { slug, data: data as T, content };
 }
 
+export type ViajeMeta = {
+  ciudad: string;
+  pais: string;
+  lat: number;
+  lon: number;
+  año: number;
+  resumen?: string;
+  fotos?: { src: string; alt: string }[];
+};
+
+export function getViajes() {
+  return getCollection<ViajeMeta>("viajes").sort(
+    (a, b) => a.data.año - b.data.año
+  );
+}
+
 export function getProyectos() {
   return getCollection<ProyectoMeta>("proyectos").sort(
     (a, b) => b.data.año - a.data.año
