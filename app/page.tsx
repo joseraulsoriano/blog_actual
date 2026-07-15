@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AsciiLogo } from "@/components/retro/ascii-logo";
 import { Typewriter } from "@/components/retro/typewriter";
 import { PromptLine, TerminalWindow } from "@/components/retro/terminal-window";
+import { getRecuerdos } from "@/lib/content";
 
 const comandos = [
   { href: "/bio", cmd: "cd ~/bio", desc: "quién soy, de dónde vengo" },
@@ -13,6 +14,7 @@ const comandos = [
 ];
 
 export default function Home() {
+  const ultimos = getRecuerdos().slice(0, 3);
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:py-16">
       <AsciiLogo className="mb-6" />
@@ -49,6 +51,27 @@ export default function Home() {
             </Link>
           ))}
         </nav>
+      </TerminalWindow>
+
+      <TerminalWindow title="tail -3 ~/recuerdos.log" className="mb-8">
+        <ul className="space-y-2 text-sm">
+          {ultimos.map((r) => (
+            <li key={r.slug}>
+              <span className="text-muted-foreground">
+                [{r.data.fecha}]
+              </span>{" "}
+              <Link
+                href={`/recuerdos/${r.slug}`}
+                className="terminal-glow text-primary underline-offset-4 hover:underline"
+              >
+                {r.data.title}
+              </Link>
+              <span className="ml-2 text-muted-foreground">
+                # {r.data.resumen}
+              </span>
+            </li>
+          ))}
+        </ul>
       </TerminalWindow>
 
       <TerminalWindow title="cápsula del tiempo">

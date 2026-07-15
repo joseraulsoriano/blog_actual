@@ -49,6 +49,20 @@ export function getEntry<T>(dir: string, slug: string): Entry<T> | null {
   return { slug, data: data as T, content };
 }
 
+export type RecuerdoMeta = {
+  title: string;
+  fecha: string; // ISO yyyy-mm-dd (día aproximado si no se conoce)
+  tipo: "hito" | "evento" | "proyecto" | "personal";
+  resumen: string;
+  enlace?: string; // ruta interna relacionada (evento, proyecto, viaje…)
+};
+
+export function getRecuerdos() {
+  return getCollection<RecuerdoMeta>("recuerdos").sort((a, b) =>
+    b.data.fecha.localeCompare(a.data.fecha)
+  );
+}
+
 export type ViajeMeta = {
   ciudad: string;
   pais: string;
