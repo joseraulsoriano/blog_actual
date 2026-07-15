@@ -1,0 +1,102 @@
+{
+  "eventos/hack-meta.mdx": {
+    "mtime": 1784155542.2875237,
+    "ast_hash": "4d9d92a518983ea01dd68fa52921a732",
+    "semantic_hash": "4d9d92a518983ea01dd68fa52921a732"
+  },
+  "eventos/hack-morelos.mdx": {
+    "mtime": 1784155549.883932,
+    "ast_hash": "91785ae2250dd7581ce38116398ec1ac",
+    "semantic_hash": "91785ae2250dd7581ce38116398ec1ac"
+  },
+  "eventos/hack-mty.mdx": {
+    "mtime": 1784155544.6487367,
+    "ast_hash": "0d516e1c34223dabf6ac42145d4ab847",
+    "semantic_hash": "0d516e1c34223dabf6ac42145d4ab847"
+  },
+  "eventos/lobo-hack.mdx": {
+    "mtime": 1784155553.6592593,
+    "ast_hash": "8e99f53336be3fbad78bf0edf05dcc14",
+    "semantic_hash": "8e99f53336be3fbad78bf0edf05dcc14"
+  },
+  "eventos/perota-chingo.mdx": {
+    "mtime": 1784155573.040368,
+    "ast_hash": "deca588fc742f71efe0efaf00a7fe647",
+    "semantic_hash": "deca588fc742f71efe0efaf00a7fe647"
+  },
+  "eventos/sabino.mdx": {
+    "mtime": 1784155569.173138,
+    "ast_hash": "12477be3341e4d3cd737275d6ca9c41c",
+    "semantic_hash": "12477be3341e4d3cd737275d6ca9c41c"
+  },
+  "eventos/talent-land-2025.mdx": {
+    "mtime": 1784155540.4062493,
+    "ast_hash": "ea9ee7a38a18893c0babe37374f397d7",
+    "semantic_hash": "ea9ee7a38a18893c0babe37374f397d7"
+  },
+  "eventos/the-weeknd.mdx": {
+    "mtime": 1784155564.0092163,
+    "ast_hash": "688e1797d7a70b34f14851eca60c0433",
+    "semantic_hash": "688e1797d7a70b34f14851eca60c0433"
+  },
+  "eventos/travis-scott.mdx": {
+    "mtime": 1784155555.0601492,
+    "ast_hash": "c49e0ee09d9d78104ea266b2c2b1714f",
+    "semantic_hash": "c49e0ee09d9d78104ea266b2c2b1714f"
+  },
+  "eventos/vive-latino-2024.mdx": {
+    "mtime": 1784155560.3109984,
+    "ast_hash": "708a5bdebc8a001956f1aec297315c73",
+    "semantic_hash": "708a5bdebc8a001956f1aec297315c73"
+  },
+  "paginas/bio.mdx": {
+    "mtime": 1784155495.3987408,
+    "ast_hash": "bba05845a3c3fbb5655fe6b05d57494a",
+    "semantic_hash": "bba05845a3c3fbb5655fe6b05d57494a"
+  },
+  "proyectos/365-dias-escribiendote.mdx": {
+    "mtime": 1784155523.3112965,
+    "ast_hash": "5982723eb103b6e72938f663b2c5e25a",
+    "semantic_hash": "5982723eb103b6e72938f663b2c5e25a"
+  },
+  "proyectos/check-driver.mdx": {
+    "mtime": 1784155517.0780015,
+    "ast_hash": "fa7e315a8a513fdf0190f9eccf38f843",
+    "semantic_hash": "fa7e315a8a513fdf0190f9eccf38f843"
+  },
+  "proyectos/conectidoc.mdx": {
+    "mtime": 1784155513.805156,
+    "ast_hash": "5ec758e2d1b7195a2e29f87bf3182216",
+    "semantic_hash": "5ec758e2d1b7195a2e29f87bf3182216"
+  },
+  "proyectos/future-funds.mdx": {
+    "mtime": 1784155510.9462016,
+    "ast_hash": "f2e31048e99bd0b5c8d6a62faa4ff534",
+    "semantic_hash": "f2e31048e99bd0b5c8d6a62faa4ff534"
+  },
+  "proyectos/ia-plus-art.mdx": {
+    "mtime": 1784155520.5728073,
+    "ast_hash": "4eb709818e9a99edebded1c2ccf33192",
+    "semantic_hash": "4eb709818e9a99edebded1c2ccf33192"
+  },
+  "proyectos/legado-digital.mdx": {
+    "mtime": 1784155508.201376,
+    "ast_hash": "a7cd3455643b9414192b3cadac115ce9",
+    "semantic_hash": "a7cd3455643b9414192b3cadac115ce9"
+  },
+  "proyectos/para-mejorar-hay-que-crecer.mdx": {
+    "mtime": 1784155703.634202,
+    "ast_hash": "c5d733f42f4a29b7d65895df555d480f",
+    "semantic_hash": "c5d733f42f4a29b7d65895df555d480f"
+  },
+  "proyectos/portafolio-ux.mdx": {
+    "mtime": 1784155531.658948,
+    "ast_hash": "073ccb8c0d930094dbcf40b56be2253d",
+    "semantic_hash": "073ccb8c0d930094dbcf40b56be2253d"
+  },
+  "proyectos/satisfaccion-dolorosa.mdx": {
+    "mtime": 1784155528.9919221,
+    "ast_hash": "d4a456ea3438bc244d129122d541acaf",
+    "semantic_hash": "d4a456ea3438bc244d129122d541acaf"
+  }
+}
