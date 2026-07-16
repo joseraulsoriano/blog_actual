@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteNav } from "@/components/site/site-nav";
 import { PrivateUnlock } from "@/components/site/private-unlock";
+import { getSiteUrl } from "@/lib/site-url";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,6 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "José Raúl Soriano — Legado digital",
     template: "%s — José Raúl Soriano",
