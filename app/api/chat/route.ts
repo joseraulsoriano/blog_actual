@@ -1,0 +1,36 @@
+import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import { agregarMensaje } from "@/lib/chat";
+
+/** API pública del chat — atraviesa el proxy /blog (Server Actions no lo hacen). */
+export async function POST(request: Request) {
+  let formData: FormData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return NextResponse.json({ ok: false, error: "formulario" }, { status: 400 });
+  }
+
+  // Honeypot
+  if (String(formData.get("website") ?? "").trim()) {
+    return NextResponse.json({ ok: true });
+  }
+
+  const nombre = String(formData.get("nombre") ?? "");
+  const texto = String(formData.get("texto") ?? "");
+
+  try {
+    const result = await agregarMensaje({ nombre, texto });
+    if (!result.ok) {
+      return NextResponse.json(
+        { ok: false, error: result.error },
+        { status: 400 }
+      );
+    }
+    revalidatePath("/");
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("[chat] POST falló", err);
+    return NextResponse.json({ ok: false, error: "servidor" }, { status: 500 });
+  }
+}
