@@ -1,0 +1,28 @@
+---
+title: Arquitectura Arduino · Mobile
+resumen: >-
+  App Expo (React Native) con dos frentes: casa inteligente (HC-05, sensores,
+  actuadores) y semáforo/estacionamiento; backend FastAPI, MQTT, Prometheus y
+  Grafana.
+categoria: mobile
+año: 2026
+origen: Escuela / laboratorio
+enlace: 'https://github.com/joseraulsoriano/arquitectura-arduino-mobile'
+portafolioId: arquitectura-arduino-mobile
+---
+Repositorio unificado para prácticas de arquitectura IoT: una app móvil controla dos escenarios de hardware. **Casa inteligente** — dashboard con telemetría (temperatura, humedad, puerta/servo, LED), control manual por Bluetooth Classic (HC-05) o vía API remota con SSE, y firmware Arduino con botones y comandos serie. **Semáforo y estacionamiento** — lógica de plazas, reserva/liberación y estado JSON desde el Arduino, parseada en la app (`parking.js`) para reflejar ocupación y semáforo en tiempo real. El stack de observabilidad corre en Docker: Mosquitto, backend FastAPI (`/metrics`, `/api/stream`), Prometheus, Alertmanager y Grafana.
+
+> IoT móvil · Bluetooth + MQTT · observabilidad
+
+### Destacados
+
+- **Casa inteligente** — HC-05 por Bluetooth Classic (Android), servo de puerta, LED PWM, sensor de temperatura y puente serie→MQTT cuando el backend corre en Docker.
+- **Semáforo y estacionamiento** — Tres plazas con sensores y reservas; la app interpreta JSON y respuestas RESERVA/LIBERAR del firmware para actualizar ocupación y señalización.
+- **Backend y métricas** — FastAPI publica estado, SSE y Prometheus; compose con Redis, Mosquitto y dashboards Grafana provisionados en `infra/`.
+- **Build nativa** — Requiere dev build (`expo prebuild` / `run:android`): módulos nativos de Bluetooth no funcionan en Expo Go.
+
+### Stack
+
+`Expo` · `React Native` · `Arduino` · `HC-05` · `FastAPI` · `MQTT` · `Docker` · `Prometheus` · `Grafana`
+
+[Repositorio](https://github.com/joseraulsoriano/arquitectura-arduino-mobile)

@@ -1,0 +1,28 @@
+---
+title: hackAIVoice · Agente de voz telefónico
+resumen: >-
+  Backend Express que conecta llamadas de Twilio (Media Streams por WebSocket)
+  con ElevenLabs Conversational AI, identificando al usuario por número con RAG.
+  Canal de voz telefónico del ecosistema MyEyesTalk (Platanus Hack 26).
+categoria: hackathon
+año: 2026
+origen: Hackathon
+enlace: 'https://github.com/rlaaron/hackAIVoice'
+portafolioId: hack-aivoice
+---
+El frente de **voz por teléfono** de MyEyesTalk: marcas un número y conversas con un agente de IA en tiempo real, sin app. Un servidor **Express** recibe el webhook `/twilio/inbound`, **identifica al usuario por su número** (consulta el backend de identidad con fallback a perfiles RAG locales) y responde con **TwiML** que abre un `<Stream>` de Twilio Media Streams. Ese stream se puentea por **WebSocket** contra la **Conversational AI de ElevenLabs**, pasando el nombre y teléfono como parámetros para personalizar la conversación. Pensado para que personas con discapacidad visual accedan al asistente desde cualquier teléfono, sin pantalla ni instalación.
+
+> Llama y habla con la IA · Twilio ↔ ElevenLabs
+
+### Destacados
+
+- **Twilio Media Streams** — Webhook de llamada entrante devuelve TwiML con `<Connect><Stream>`; el audio se transmite en vivo por WebSocket a `wss://.../ws`.
+- **ElevenLabs Conversational AI** — El stream de Twilio se puentea contra la API conversacional de ElevenLabs por `agent_id`, con voz natural en tiempo real.
+- **Identidad por número + RAG** — Normaliza el teléfono (+521/+52) y resuelve identidad desde el backend, con fallback a perfiles RAG locales para demo offline.
+- **Sin app, accesible** — Cualquier teléfono sirve como interfaz: marca y habla. Complementa a las gafas Ray-Ban Meta de MyEyesTalk.
+
+### Stack
+
+`Node.js` · `Express` · `Twilio` · `WebSocket` · `ElevenLabs` · `Docker`
+
+[Repositorio](https://github.com/rlaaron/hackAIVoice)

@@ -1,0 +1,24 @@
+---
+title: Recetario MCP
+resumen: >-
+  Motor MCP (FastAPI) para recetas, ingredientes, precios y tiendas en México:
+  Brave Search API + scraping a supermercados sin APIs de tienda.
+categoria: tech
+año: 2026
+origen: Escuela / laboratorio
+portafolioId: recetario-mcp
+---
+Servicio Python/FastAPI que expone cuatro tools vía POST bajo `/mcp/recetario.*`. Las búsquedas usan la Web Search API de Brave (`country=MX`, `search_lang=es`, `extra_snippets` en recetas e ingredientes). Los precios combinan Brave con scraping HTML a Walmart, Soriana y Chedraui (`app/scraping/supermarkets.py`), sin APIs oficiales de tienda. Sin `BRAVE_API_KEY` las tools devuelven listas vacías. Opcional: cabecera `X-API-Key` o `Authorization: Bearer` en `/mcp/*` y `/tools` si defines `API_KEY` (en producción el backend-alexa envía `MCP_API_KEY`); `/health` queda libre.
+
+> Mismo estilo que volunteer-mcp: Brave + scraping MX para precios y recetas
+
+### Destacados
+
+- **Flujo de voz y backend** — Usuario → Alexa (Lambda) → backend-alexa → este MCP → tools (Brave + scraping) → respuesta a Alexa. El backend puede apuntar con `MCP_BASE_URL` al despliegue del MCP (p. ej. Railway).
+- **Cuatro tools MCP** — `recetario.recipes_search`, `recetario.ingredients_search`, `recetario.prices_search`, `recetario.stores_search`: cuerpos JSON de ejemplo en README (`query`, `tipo_comida`, `location`, etc.).
+- **Brave Search (implementación oficial)** — `GET https://api.search.brave.com/res/v1/web/search` con `X-Subscription-Token`, parámetros `q`, `count`, `country`, `search_lang`, `extra_snippets`; rate limit `BRAVE_MAX_RPS` y cuota `BRAVE_MONTHLY_QUOTA`; Redis opcional para cuota distribuida.
+- **Scraping y despliegue** — Selectores de precio/nombre en páginas de supermercados; si cambian las tiendas, toca actualizar selectores. Arranque rápido: `docker compose up --build`; alternativa venv con `python -m app.main`.
+
+### Stack
+
+`Python` · `FastAPI` · `Brave Search API` · `Docker`
