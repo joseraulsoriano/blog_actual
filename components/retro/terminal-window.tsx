@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** Marco de ventana estilo terminal con barra de título ASCII. */
+/** Marco con acento blanco neón. */
 export function TerminalWindow({
   title,
   children,
@@ -11,19 +11,24 @@ export function TerminalWindow({
   className?: string;
 }) {
   return (
-    <section className={cn("border border-border bg-card", className)}>
-      <header className="flex items-center gap-2 border-b border-border px-3 py-2 text-xs text-muted-foreground select-none">
-        <span aria-hidden>●</span>
-        <span aria-hidden>●</span>
-        <span aria-hidden>●</span>
-        <span className="ml-2 truncate">┌─[ {title} ]</span>
+    <section
+      className={cn(
+        "border border-white/[0.14] bg-white/[0.02]",
+        className
+      )}
+    >
+      <header className="flex items-center gap-2 border-b border-white/[0.1] px-3 py-2.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground select-none">
+        <span className="h-1.5 w-1.5 rounded-full bg-white/40" aria-hidden />
+        <span className="h-1.5 w-1.5 rounded-full bg-white/25" aria-hidden />
+        <span className="h-1.5 w-1.5 rounded-full bg-white/15" aria-hidden />
+        <span className="ml-2 truncate text-foreground/70">{title}</span>
       </header>
       <div className="p-4 sm:p-6">{children}</div>
     </section>
   );
 }
 
-/** Línea de prompt: chasse@legado:~$ <comando> */
+/** Línea de prompt minimal. */
 export function PromptLine({
   command,
   path = "~",
@@ -35,14 +40,14 @@ export function PromptLine({
 }) {
   return (
     <p className={cn("text-sm", className)}>
-      <span className="text-accent">chasse@legado</span>
-      <span className="text-muted-foreground">:{path}$</span>{" "}
-      <span className="terminal-glow">{command}</span>
+      <span className="text-muted-foreground">chasse@{path}</span>
+      <span className="text-muted-foreground"> $ </span>
+      <span className="terminal-glow text-primary">{command}</span>
     </p>
   );
 }
 
-/** Barra de progreso ASCII: [████████░░] 4.0/5 */
+/** Barra de progreso ASCII. */
 export function AsciiBar({
   value,
   max = 5,
@@ -64,7 +69,7 @@ export function AsciiBar({
       aria-label={`${value} de ${max}`}
     >
       <span className="text-muted-foreground">[</span>
-      <span className="text-primary">{"█".repeat(filled)}</span>
+      <span className="text-primary terminal-glow">{"█".repeat(filled)}</span>
       <span className="text-muted-foreground/50">{"░".repeat(width - filled)}</span>
       <span className="text-muted-foreground">]</span>
       {label ? <span className="ml-2 text-muted-foreground">{label}</span> : null}

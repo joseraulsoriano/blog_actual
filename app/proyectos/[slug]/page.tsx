@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getEntry, getProyectos, type ProyectoMeta } from "@/lib/content";
 import { mdxComponents } from "@/components/retro/mdx";
-import { PromptLine, TerminalWindow } from "@/components/retro/terminal-window";
+import { PageShell } from "@/components/site/page-shell";
 
 export function generateStaticParams() {
   return getProyectos().map((p) => ({ slug: p.slug }));
@@ -31,37 +30,29 @@ export default async function ProyectoPage({
   if (!p) notFound();
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <PromptLine command={`cat ~/proyectos/${slug}.mdx`} className="mb-4" />
-      <TerminalWindow title={`${p.data.title} · ${p.data.año}`}>
-        {p.data.origen ? (
-          <p className="mb-4 text-xs text-accent"># {p.data.origen}</p>
-        ) : null}
-        <article>
-          <MDXRemote source={p.content} components={mdxComponents} />
-        </article>
-        {p.data.enlace ? (
-          <p className="mt-6 text-sm">
-            <span className="text-muted-foreground">└─ enlace:</span>{" "}
-            <a
-              href={p.data.enlace}
-              target="_blank"
-              rel="noreferrer"
-              className="text-accent underline underline-offset-4 hover:text-primary"
-            >
-              {p.data.enlace}
-            </a>
-          </p>
-        ) : null}
-      </TerminalWindow>
-      <p className="mt-6 text-sm">
-        <Link
-          href="/proyectos"
-          className="text-muted-foreground hover:text-foreground"
-        >
-          ← cd ~/proyectos/
-        </Link>
+    <PageShell>
+      <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+        Proyecto · {p.data.año}
+        {p.data.origen ? ` · ${p.data.origen}` : ""}
       </p>
-    </div>
+      <h1 className="mb-8 text-balance text-[clamp(1.85rem,4.5vw,2.75rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-primary neon-text">
+        {p.data.title}
+      </h1>
+      <article className="max-w-prose">
+        <MDXRemote source={p.content} components={mdxComponents} />
+      </article>
+      {p.data.enlace ? (
+        <p className="mt-8 text-sm">
+          <a
+            href={p.data.enlace}
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary underline decoration-white/25 underline-offset-4 hover:decoration-white/60"
+          >
+            Visitar enlace
+          </a>
+        </p>
+      ) : null}
+    </PageShell>
   );
 }

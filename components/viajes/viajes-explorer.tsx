@@ -1,136 +1,161 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { AsciiGlobe, type CiudadGlobo } from "@/components/retro/ascii-globe";
-import { TerminalWindow } from "@/components/retro/terminal-window";
+import { useEffect, useState } from "react";
+import { MexicoMap, type CiudadMapa } from "@/components/viajes/mexico-map";
+import { CityDetail } from "@/components/viajes/city-detail";
+import type { ViajeEtapa } from "@/lib/content";
+import type { CityRelated } from "@/lib/viajes/related";
 import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-export type ViajeItem = CiudadGlobo & {
+export type ViajeItem = CiudadMapa & {
   pais: string;
   año: number;
   resumen?: string;
   fotos: { src: string; alt: string }[];
+  etapas: ViajeEtapa[];
 };
+
+function useIsMobile(breakpoint = 1024) {
+  const [mobile, setMobile] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    const update = () => setMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, [breakpoint]);
+  return mobile;
+}
 
 export function ViajesExplorer({
   viajes,
-  notas,
+  related,
+  initialSelected = null,
 }: {
   viajes: ViajeItem[];
-  notas: Record<string, React.ReactNode>;
+  related: Record<string, CityRelated>;
+  initialSelected?: string | null;
 }) {
-  const [selected, setSelected] = useState<string | null>(null);
+  const isMobile = useIsMobile();
+  const [selected, setSelected] = useState<string | null>(() => {
+    if (
+      initialSelected &&
+      viajes.some((v) => v.slug === initialSelected)
+    ) {
+      return initialSelected;
+    }
+    return null;
+  });
   const viaje = viajes.find((v) => v.slug === selected) ?? null;
+  const cityRelated = selected
+    ? related[selected] ?? { eventos: [], recuerdos: [] }
+    : { eventos: [], recuerdos: [] };
+
+  function selectCity(slug: string | null) {
+    setSelected(slug);
+  }
+
+  const detail = viaje ? (
+    <CityDetail
+      ciudad={viaje.ciudad}
+      pais={viaje.pais}
+      año={viaje.año}
+      resumen={viaje.resumen}
+      fotos={viaje.fotos}
+      etapas={viaje.etapas}
+      related={cityRelated}
+    />
+  ) : null;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[auto_1fr]">
-      <div className="flex flex-col items-center gap-4">
-        <AsciiGlobe
-          cities={viajes}
-          selected={selected}
-          onSelect={setSelected}
-        />
-        <p className="text-xs text-muted-foreground">
-          ○ = ciudad visitada · haz clic para seleccionar
-        </p>
-      </div>
+    <div className="space-y-4 sm:space-y-5">
+      <MexicoMap
+        cities={viajes}
+        selected={selected}
+        onSelect={selectCity}
+        className="mx-auto max-h-[min(40vh,20rem)] [&_svg]:max-h-[min(40vh,20rem)] lg:max-h-[min(48vh,26rem)] lg:[&_svg]:max-h-[min(48vh,26rem)]"
+      />
 
-      <div className="min-w-0 space-y-4">
-        <TerminalWindow title="viajes — selecciona destino">
-          <ul className="space-y-1.5 text-sm">
-            {viajes.map((v) => (
-              <li key={v.slug}>
+      <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:overflow-visible sm:px-0">
+        <ul className="flex gap-2 pb-1 sm:flex-wrap" role="list">
+          {viajes.map((v) => {
+            const active = selected === v.slug;
+            return (
+              <li key={v.slug} className="shrink-0">
                 <button
-                  onClick={() =>
-                    setSelected(v.slug === selected ? null : v.slug)
-                  }
+                  type="button"
+                  onClick={() => selectCity(active && isMobile ? null : v.slug)}
                   className={cn(
-                    "text-left",
-                    v.slug === selected
-                      ? "terminal-glow text-accent"
-                      : "text-primary hover:text-accent"
+                    "min-h-11 rounded-full border px-3.5 py-2 text-sm transition-colors",
+                    active
+                      ? "border-white/50 bg-white/[0.1] text-primary"
+                      : "border-white/15 text-foreground/75 active:bg-white/[0.06]"
                   )}
                 >
-                  <span className="text-accent">&gt;</span>{" "}
-                  {v.slug === selected ? "◉" : "○"} {v.ciudad}
-                  <span className="ml-2 text-xs text-muted-foreground">
-                    {v.pais} · desde {v.año}
-                  </span>
+                  {v.ciudad}
                 </button>
               </li>
-            ))}
-          </ul>
-        </TerminalWindow>
-
-        {viaje ? (
-          <TerminalWindow title={`${viaje.ciudad.toLowerCase()} — bitácora`}>
-            <article>{notas[viaje.slug]}</article>
-
-            <h3 className="terminal-glow mt-6 mb-3 text-sm font-semibold text-primary">
-              <span className="text-accent">$</span> ls fotos/
-            </h3>
-            {viaje.fotos.length > 0 ? (
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                {viaje.fotos.map((f) => (
-                  <Dialog key={f.src}>
-                    <DialogTrigger
-                      render={
-                        <button
-                          className="group relative aspect-square overflow-hidden border border-border"
-                          aria-label={`Ampliar foto: ${f.alt}`}
-                        >
-                          <Image
-                            src={f.src}
-                            alt={f.alt}
-                            fill
-                            sizes="(max-width: 640px) 50vw, 200px"
-                            className="object-cover saturate-50 transition group-hover:saturate-100"
-                          />
-                        </button>
-                      }
-                    />
-                    <DialogContent className="max-w-3xl border-border bg-card p-2">
-                      <DialogTitle className="px-2 pt-2 text-sm text-primary">
-                        {f.alt}
-                      </DialogTitle>
-                      <Image
-                        src={f.src}
-                        alt={f.alt}
-                        width={1200}
-                        height={800}
-                        className="h-auto w-full object-contain"
-                      />
-                    </DialogContent>
-                  </Dialog>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                ls: fotos/: directorio vacío —{" "}
-                <span className="text-foreground/70">
-                  añade fotos en{" "}
-                  <code className="text-accent">
-                    content/viajes/{viaje.slug}.mdx
-                  </code>{" "}
-                  (campo <code className="text-accent">fotos:</code>)
-                </span>
-              </p>
-            )}
-          </TerminalWindow>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            <span className="text-accent">$</span> selecciona una ciudad en el
-            globo o en la lista<span className="cursor-blink" />
-          </p>
-        )}
+            );
+          })}
+        </ul>
       </div>
+
+      {!isMobile ? (
+        <div className="hidden border border-white/[0.12] bg-white/[0.02] p-5 lg:block lg:p-7">
+          {detail ?? (
+            <p className="text-sm text-muted-foreground">
+              Selecciona una ciudad.
+            </p>
+          )}
+        </div>
+      ) : null}
+
+      <Sheet
+        open={isMobile && selected != null}
+        onOpenChange={(open) => {
+          if (!open) setSelected(null);
+        }}
+      >
+        <SheetContent
+          side="bottom"
+          showCloseButton
+          className="flex max-h-[88dvh] flex-col gap-0 overflow-hidden border-white/15 bg-black p-0 sm:max-w-none"
+        >
+          <div
+            className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-white/25"
+            aria-hidden
+          />
+          <SheetHeader className="shrink-0 border-b border-white/[0.08] px-5 pb-3 pt-2 text-left">
+            <SheetTitle className="text-xl tracking-[-0.02em]">
+              {viaje?.ciudad ?? "Ciudad"}
+            </SheetTitle>
+            <SheetDescription className="text-xs text-muted-foreground">
+              {viaje ? `Desde ${viaje.año}` : ""}
+            </SheetDescription>
+          </SheetHeader>
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5 pb-[max(5.5rem,env(safe-area-inset-bottom))] md:pb-5">
+            {viaje ? (
+              <CityDetail
+                ciudad={viaje.ciudad}
+                pais={viaje.pais}
+                año={viaje.año}
+                resumen={viaje.resumen}
+                fotos={viaje.fotos}
+                etapas={viaje.etapas}
+                related={cityRelated}
+                hideHeader
+              />
+            ) : null}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

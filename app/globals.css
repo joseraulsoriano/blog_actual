@@ -48,46 +48,46 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ── Tema retro terminal: fósforo verde sobre CRT ─────────────────── */
+/* ── Negro + blanco neón ─────────────────────────────────────────── */
 :root {
-  --background: oklch(0.16 0.015 150);
-  --foreground: oklch(0.85 0.16 148);
-  --card: oklch(0.19 0.02 150);
-  --card-foreground: oklch(0.85 0.16 148);
-  --popover: oklch(0.19 0.02 150);
-  --popover-foreground: oklch(0.85 0.16 148);
-  --primary: oklch(0.87 0.19 148);
-  --primary-foreground: oklch(0.17 0.02 150);
-  --secondary: oklch(0.25 0.03 150);
-  --secondary-foreground: oklch(0.85 0.16 148);
-  --muted: oklch(0.23 0.025 150);
-  --muted-foreground: oklch(0.63 0.09 148);
-  --accent: oklch(0.85 0.14 90);
-  --accent-foreground: oklch(0.17 0.02 150);
-  --destructive: oklch(0.65 0.2 25);
-  --border: oklch(0.85 0.16 148 / 25%);
-  --input: oklch(0.85 0.16 148 / 20%);
-  --ring: oklch(0.87 0.19 148 / 60%);
-  --chart-1: oklch(0.87 0.19 148);
-  --chart-2: oklch(0.85 0.14 90);
-  --chart-3: oklch(0.63 0.09 148);
-  --chart-4: oklch(0.45 0.06 148);
-  --chart-5: oklch(0.3 0.04 148);
-  --radius: 0rem;
-  --sidebar: oklch(0.19 0.02 150);
-  --sidebar-foreground: oklch(0.85 0.16 148);
-  --sidebar-primary: oklch(0.87 0.19 148);
-  --sidebar-primary-foreground: oklch(0.17 0.02 150);
-  --sidebar-accent: oklch(0.25 0.03 150);
-  --sidebar-accent-foreground: oklch(0.85 0.16 148);
-  --sidebar-border: oklch(0.85 0.16 148 / 25%);
-  --sidebar-ring: oklch(0.87 0.19 148 / 60%);
+  --background: oklch(0 0 0);
+  --foreground: oklch(0.96 0 0);
+  --card: oklch(0.08 0 0);
+  --card-foreground: oklch(0.96 0 0);
+  --popover: oklch(0.08 0 0);
+  --popover-foreground: oklch(0.96 0 0);
+  --primary: oklch(0.98 0 0);
+  --primary-foreground: oklch(0 0 0);
+  --secondary: oklch(0.16 0 0);
+  --secondary-foreground: oklch(0.96 0 0);
+  --muted: oklch(0.14 0 0);
+  --muted-foreground: oklch(0.62 0 0);
+  --accent: oklch(0.92 0 0);
+  --accent-foreground: oklch(0 0 0);
+  --destructive: oklch(0.72 0 0);
+  --border: oklch(1 0 0 / 16%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(1 0 0 / 55%);
+  --chart-1: oklch(0.98 0 0);
+  --chart-2: oklch(0.8 0 0);
+  --chart-3: oklch(0.62 0 0);
+  --chart-4: oklch(0.45 0 0);
+  --chart-5: oklch(0.3 0 0);
+  --radius: 0.35rem;
+  --sidebar: oklch(0.06 0 0);
+  --sidebar-foreground: oklch(0.96 0 0);
+  --sidebar-primary: oklch(0.98 0 0);
+  --sidebar-primary-foreground: oklch(0 0 0);
+  --sidebar-accent: oklch(0.16 0 0);
+  --sidebar-accent-foreground: oklch(0.96 0 0);
+  --sidebar-border: oklch(1 0 0 / 16%);
+  --sidebar-ring: oklch(1 0 0 / 55%);
+  --neon-glow: oklch(1 0 0 / 45%);
 }
 
-/* La terminal siempre es oscura: .dark hereda los mismos tokens. */
 .dark {
-  --background: oklch(0.16 0.015 150);
-  --foreground: oklch(0.85 0.16 148);
+  --background: oklch(0 0 0);
+  --foreground: oklch(0.96 0 0);
 }
 
 @layer base {
@@ -98,15 +98,15 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-mono;
+    @apply font-sans;
   }
   ::selection {
-    background: var(--foreground);
-    color: var(--background);
+    background: oklch(1 0 0 / 85%);
+    color: oklch(0 0 0);
   }
 }
 
-/* ── Efectos CRT ──────────────────────────────────────────────────── */
+/* ── Atmósfera: scanlines suaves + viñeta ─────────────────────────── */
 .crt::before {
   content: "";
   position: fixed;
@@ -117,7 +117,7 @@
     to bottom,
     transparent 0px,
     transparent 2px,
-    oklch(0 0 0 / 12%) 3px,
+    oklch(0 0 0 / 8%) 3px,
     transparent 4px
   );
 }
@@ -130,13 +130,22 @@
   pointer-events: none;
   background: radial-gradient(
     ellipse at center,
-    transparent 60%,
-    oklch(0 0 0 / 35%) 100%
+    transparent 55%,
+    oklch(0 0 0 / 45%) 100%
   );
 }
 
+.neon-text,
 .terminal-glow {
-  text-shadow: 0 0 6px oklch(0.87 0.19 148 / 55%);
+  text-shadow:
+    0 0 10px oklch(1 0 0 / 40%),
+    0 0 28px oklch(1 0 0 / 18%);
+}
+
+.neon-border {
+  box-shadow:
+    0 0 12px oklch(1 0 0 / 12%),
+    inset 0 0 12px oklch(1 0 0 / 04%);
 }
 
 @keyframes cursor-blink {

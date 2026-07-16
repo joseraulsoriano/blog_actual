@@ -1,0 +1,27 @@
+---
+title: Mock Interview · English Coach
+resumen: >-
+  Entrevistador técnico por voz en inglés, casi en tiempo real: WebRTC con
+  ElevenLabs, coaching inline de gramática y feedback final con errores
+  recurrentes.
+categoria: tech
+año: 2026
+origen: Escuela / laboratorio
+portafolioId: mock-interview-english-coach
+---
+Simula una entrevista real hablando por micrófono: el agente **Alex** (engineering manager senior) hace preguntas behavioral y técnicas de backend mientras corrige gramática y phrasing sin cortar el ritmo. Si te atasacas, una pista breve en español y vuelta al inglés. Al cerrar, recibes feedback hablado con fortalezas, áreas de mejora y tus errores de inglés más frecuentes con la forma correcta. Puedes elegir enfoque (Backend general, System design, Behavioral STAR o DevOps & Cloud), subir tu CV para personalizar preguntas y descargar el transcript en vivo.
+
+> Practica entrevistas backend en inglés · voz + coaching
+
+### Destacados
+
+- **Voz casi en tiempo real** — Conversación fluida vía WebRTC con latencia inferior a 1 s: STT + LLM + TTS en un solo stream bidireccional mic ↔ agente.
+- **Entrevistador Alex** — Simula un engineering manager senior con preguntas realistas de backend y behavioral; enfoque configurable por tema.
+- **Coaching de inglés inline** — Corrige gramática y phrasing sobre la marcha; pistas en español cuando te bloqueas, sin romper el flujo de la entrevista.
+- **CV personalizado** — Sube PDF, TXT o MD; el servidor extrae texto (pdf-parse), trunca a 2 500 caracteres e inyecta contexto en cada turno del LLM.
+- **Token efímero en servidor** — La API key de ElevenLabs nunca sale del cliente: `/api/conversation-token` emite credenciales WebRTC de corta duración.
+- **Transcript y feedback final** — Historial descargable en `.txt`; al terminar, feedback hablado estructurado con patrones de error recurrentes.
+
+### Stack
+
+`Next.js` · `React` · `TypeScript` · `Tailwind CSS` · `ElevenLabs` · `WebRTC` · `pdf-parse` · `Node.js`

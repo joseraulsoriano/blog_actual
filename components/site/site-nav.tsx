@@ -2,100 +2,119 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  BookOpen,
+  FolderKanban,
+  Home,
+  MapPinned,
+  Ticket,
+  UserRound,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/", label: "Inicio" },
-  { href: "/bio", label: "Bio" },
-  { href: "/proyectos", label: "Proyectos" },
-  { href: "/eventos", label: "Eventos" },
-  { href: "/viajes", label: "Viajes" },
-  { href: "/recuerdos", label: "Recuerdos" },
-  { href: "/privado", label: "Privado" },
-];
+  { href: "/", label: "Inicio", icon: Home },
+  { href: "/bio", label: "Bio", icon: UserRound },
+  { href: "/proyectos", label: "Proyectos", icon: FolderKanban },
+  { href: "/eventos", label: "Eventos", icon: Ticket },
+  { href: "/viajes", label: "Viajes", icon: MapPinned },
+  { href: "/recuerdos", label: "Recuerdos", icon: BookOpen },
+] as const;
 
-function NavLink({
-  href,
-  label,
-  className,
-  onClick,
-}: {
-  href: string;
-  label: string;
-  className?: string;
-  onClick?: () => void;
-}) {
+function isActive(pathname: string, href: string) {
+  return href === "/" ? pathname === "/" : pathname.startsWith(href);
+}
+
+/** Regreso único: icono home brilloso (fuera del inicio y del privado). */
+function HomeReturn() {
   const pathname = usePathname();
-  const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+  if (pathname === "/" || pathname.startsWith("/privado")) return null;
+
   return (
     <Link
-      href={href}
-      onClick={onClick}
+      href="/"
+      aria-label="Inicio"
       className={cn(
-        "text-sm transition-colors hover:text-foreground",
-        active ? "text-foreground font-medium" : "text-muted-foreground",
-        className
+        "fixed left-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full",
+        "border border-white/25 bg-black/70 text-primary backdrop-blur-md",
+        "shadow-[0_0_20px_oklch(1_0_0_/_0.35)]",
+        "transition-transform hover:scale-105 hover:border-white/50",
+        "hover:shadow-[0_0_28px_oklch(1_0_0_/_0.55)]",
+        "sm:left-5 sm:top-5"
       )}
     >
-      {label}
+      <Home
+        className="h-5 w-5 stroke-[1.5] drop-shadow-[0_0_10px_oklch(1_0_0_/_0.85)]"
+        aria-hidden
+      />
     </Link>
   );
 }
 
 export function SiteNav() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/privado")) return null;
+
+  const enInicio = pathname === "/";
+
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <Link href="/" className="terminal-glow font-semibold tracking-tight">
-          [chasse@blog ~]$
-        </Link>
+    <>
+      <HomeReturn />
 
-        <nav className="hidden items-center gap-6 md:flex">
-          {links.map((l) => (
-            <NavLink key={l.href} {...l} />
-          ))}
-          <a
-            href="/2021/index.html"
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            title="Versión 2021 del blog, conservada como pieza del legado"
-          >
-            🕰️ 2021
-          </a>
+      {/* Dock solo en home; en el resto basta el icono home */}
+      {enInicio ? (
+        <nav
+          aria-label="Principal"
+          className={cn(
+            "fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.08] bg-black/90 backdrop-blur-md",
+            "pb-[max(0.35rem,env(safe-area-inset-bottom))]",
+            "md:inset-x-auto md:bottom-6 md:left-1/2 md:w-auto md:-translate-x-1/2",
+            "md:rounded-full md:border md:border-white/15 md:bg-black/85 md:px-2 md:shadow-[0_0_24px_oklch(0_0_0_/_0.6)]"
+          )}
+        >
+          <ul className="mx-auto flex max-w-lg items-stretch justify-between gap-0 px-1 md:gap-1 md:px-2">
+            {links.map(({ href, label, icon: Icon }) => {
+              const active = isActive(pathname, href);
+              const isHome = href === "/";
+              return (
+                <li key={href} className="flex-1 md:flex-none">
+                  <Link
+                    href={href}
+                    aria-label={label}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex min-h-14 flex-col items-center justify-center gap-0.5 px-2 text-[9px] uppercase tracking-[0.12em] transition-colors md:min-h-12 md:min-w-12 md:rounded-full md:px-3",
+                      active
+                        ? "text-primary"
+                        : "text-white/40 active:text-white/70 md:hover:text-white/80"
+                    )}
+                  >
+                    <Icon
+                      className={cn(
+                        "h-[1.35rem] w-[1.35rem] stroke-[1.5]",
+                        (active || isHome) &&
+                          "drop-shadow-[0_0_10px_oklch(1_0_0_/_0.7)]",
+                        isHome &&
+                          active &&
+                          "drop-shadow-[0_0_14px_oklch(1_0_0_/_0.95)]"
+                      )}
+                      aria-hidden
+                    />
+                    <span className="md:sr-only">{label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
+      ) : null}
 
-        <Sheet>
-          <SheetTrigger
-            render={
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Abrir menú</span>
-              </Button>
-            }
-          />
-          <SheetContent side="right" className="w-64">
-            <SheetTitle className="px-1 text-base">Navegación</SheetTitle>
-            <nav className="mt-4 flex flex-col gap-4 px-1">
-              {links.map((l) => (
-                <NavLink key={l.href} {...l} className="text-base" />
-              ))}
-              <a
-                href="/2021/index.html"
-                className="text-base text-muted-foreground transition-colors hover:text-foreground"
-              >
-                🕰️ Versión 2021
-              </a>
-            </nav>
-          </SheetContent>
-        </Sheet>
-      </div>
-    </header>
+      <div
+        className={cn(
+          enInicio ? "h-16 md:h-0" : "h-14"
+        )}
+        aria-hidden
+      />
+    </>
   );
 }

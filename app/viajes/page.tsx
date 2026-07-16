@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import { getViajes } from "@/lib/content";
-import { mdxComponents } from "@/components/retro/mdx";
-import { PromptLine } from "@/components/retro/terminal-window";
+import { getEventos, getRecuerdos, getViajes } from "@/lib/content";
+import { buildCityRelated } from "@/lib/viajes/related";
+import { PageHeader, PageShell } from "@/components/site/page-shell";
 import {
   ViajesExplorer,
   type ViajeItem,
@@ -10,12 +9,18 @@ import {
 
 export const metadata: Metadata = {
   title: "Viajes",
-  description:
-    "Viajando por el mundo: las ciudades de José Raúl Soriano en un planeta ASCII.",
+  description: "Ciudades en México y la línea de tiempo de lo documentado en cada una.",
 };
 
-export default function ViajesPage() {
+export default async function ViajesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ ciudad?: string }>;
+}) {
+  const { ciudad } = await searchParams;
   const entradas = getViajes();
+  const eventos = getEventos();
+  const recuerdos = getRecuerdos();
 
   const viajes: ViajeItem[] = entradas.map((e) => ({
     slug: e.slug,
@@ -26,23 +31,28 @@ export default function ViajesPage() {
     año: e.data.año,
     resumen: e.data.resumen,
     fotos: e.data.fotos ?? [],
+    etapas: e.data.etapas ?? [],
   }));
 
-  const notas: Record<string, React.ReactNode> = {};
-  for (const e of entradas) {
-    notas[e.slug] = (
-      <MDXRemote source={e.content} components={mdxComponents} />
-    );
-  }
+  const related = buildCityRelated(
+    entradas.map((e) => ({ slug: e.slug, content: e.content })),
+    eventos,
+    recuerdos
+  );
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
-      <PromptLine command="./planeta --render --marcar-ciudades" className="mb-2" />
-      <p className="mb-8 text-sm text-muted-foreground">
-        Viajando por el mundo — {viajes.length} ciudades registradas en la
-        bitácora.
-      </p>
-      <ViajesExplorer viajes={viajes} notas={notas} />
-    </div>
+    <PageShell className="max-w-3xl px-4 sm:px-6 lg:max-w-5xl">
+      <PageHeader
+        eyebrow="México"
+        title="Viajes"
+        lede="Elige una ciudad en el mapa. Abajo, la línea de tiempo de lo que quedó documentado ahí."
+        className="mb-6 sm:mb-8"
+      />
+      <ViajesExplorer
+        viajes={viajes}
+        related={related}
+        initialSelected={ciudad ?? null}
+      />
+    </PageShell>
   );
 }

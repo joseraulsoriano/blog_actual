@@ -10,13 +10,28 @@ export type Entry<T> = {
   content: string;
 };
 
+export type ProyectoCategoria =
+  | "tech"
+  | "hackathon"
+  | "escrito"
+  | "libro"
+  | "video"
+  | "ia-arte"
+  | "ux"
+  | "web"
+  | "mobile"
+  | "producto"
+  | "hub";
+
 export type ProyectoMeta = {
   title: string;
   resumen: string;
-  categoria: "web" | "hackathon" | "escrito" | "ia-arte" | "ux";
+  categoria: ProyectoCategoria;
   año: number;
   origen?: string;
   enlace?: string;
+  /** id original en el portafolio (si viene de allí). */
+  portafolioId?: string;
 };
 
 export type EventoMeta = {
@@ -49,12 +64,20 @@ export function getEntry<T>(dir: string, slug: string): Entry<T> | null {
   return { slug, data: data as T, content };
 }
 
+/**
+ * Post corto tipo timeline (publicado desde /privado).
+ * El texto vive en el body del MDX; frontmatter mínimo.
+ */
 export type RecuerdoMeta = {
-  title: string;
-  fecha: string; // ISO yyyy-mm-dd (día aproximado si no se conoce)
-  tipo: "hito" | "evento" | "proyecto" | "personal";
-  resumen: string;
-  enlace?: string; // ruta interna relacionada (evento, proyecto, viaje…)
+  /** ISO `yyyy-mm-dd` o `yyyy-mm-ddTHH:mm`. */
+  fecha: string;
+  enlace?: string;
+  /** @deprecated legado — usar body */
+  title?: string;
+  /** @deprecated legado — usar body */
+  resumen?: string;
+  /** @deprecated legado */
+  tipo?: "hito" | "evento" | "proyecto" | "personal";
 };
 
 export function getRecuerdos() {
@@ -62,6 +85,15 @@ export function getRecuerdos() {
     b.data.fecha.localeCompare(a.data.fecha)
   );
 }
+
+export type ViajeEtapa = {
+  /** Año de inicio (o año único). */
+  año: number;
+  /** Año final opcional (p. ej. 2019–2022). */
+  hasta?: number;
+  texto: string;
+  href?: string;
+};
 
 export type ViajeMeta = {
   ciudad: string;
@@ -71,6 +103,8 @@ export type ViajeMeta = {
   año: number;
   resumen?: string;
   fotos?: { src: string; alt: string }[];
+  /** Hechos fijos de la ciudad (estudio, etapas…) — se mezclan en la timeline. */
+  etapas?: ViajeEtapa[];
 };
 
 export function getViajes() {

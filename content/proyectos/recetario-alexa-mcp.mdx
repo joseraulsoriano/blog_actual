@@ -1,0 +1,21 @@
+---
+title: Recetario Alexa + MCP
+resumen: 'Alexa skill + MCP engine: recipes, ingredients, prices. End-to-end flow.'
+categoria: tech
+año: 2026
+origen: Escuela / laboratorio
+portafolioId: recetario-alexa-mcp
+---
+Two-part repo: recetario-mcp (Python/FastAPI) and backend-alexa (Node.js). Flow: Alexa Lambda → backend-alexa → recetario-mcp → Brave/scraping. Backend exposes /api/mcp/recipes, ingredients, etc.
+
+> Voice to recipes: Alexa calls backend, backend calls MCP
+
+### Destacados
+
+- **MCP + Alexa backend** — recetario-mcp on port 8012, backend-alexa on 3001.
+- **Render deployment** — Two web services: one for MCP, one for backend.
+- **Environment variables** — BRAVE_API_KEY, MCP_BASE_URL to link services.
+
+### Stack
+
+`Python` · `FastAPI` · `Node.js` · `Alexa` · `Lambda` · `Brave Search` · `Docker`

@@ -1,6 +1,5 @@
 // Autogenerado por scripts/generate-earth-mask.mjs — no editar a mano.
-// Máscara de tierra equirectangular 144x72 ('#' tierra, '.' océano),
-// derivada de public/2021/assets/img/earth_texture.jpg (blog 2021).
+// Máscara de tierra equirectangular 144x72 ('#' tierra, '.' océano).
 export const EARTH_MASK_W = 144;
 export const EARTH_MASK_H = 72;
 export const EARTH_MASK: string[] = [

@@ -1,0 +1,31 @@
+---
+title: Platanus Hack 26 · MyEyesTalk
+resumen: >-
+  CDMX · track New Interfaces: Puente / MyEyesTalk — accesibilidad con Meta
+  Ray-Ban, visión y voz para asistir a personas con discapacidad visual.
+categoria: hackathon
+año: 2026
+origen: Hackathon
+enlace: 'https://web-seven-silk-77.vercel.app'
+portafolioId: hack-platanus-myeyestalk
+---
+MyEyesTalk no sustituye los sentidos: **devuelve agencia**. Traduce el punto de vista de las gafas Ray-Ban Meta Gen 2 (sin pantalla ni HUD) en **narración espacial**, **decisiones** y **acciones por voz** a través de sus altavoces, todo en español mexicano. Un loop cognitivo corre en el teléfono y usa las gafas solo como cámara + micrófono + altavoz: push-to-talk captura voz y un frame POV → **STT** (AssemblyAI) → **RAG** que evita re-analizar lugares ya conocidos (aprende el supermercado) → **visión** (Claude / GPT-4o mini) que devuelve `SceneJSON` / `ProductJSON` → **agente Hermes** que decide, mantiene lista de compras, sugiere alternativas de marca y recuerda preferencias → **TTS** (ElevenLabs) de vuelta a las gafas. Demostrable en un flujo real de persona ciega en un supermercado.
+
+> Visión egocéntrica → voz · Ray-Ban Meta · RAG + agente
+
+### Destacados
+
+- **Sentido** — Orientación y narración espacial egocéntrica (izquierda / derecha / adelante) a partir del frame POV de las gafas.
+- **Super + RAG** — Lista de compras con memoria del supermercado: el RAG aprende el entorno e identifica productos, confirmando antes de actuar.
+- **Agente Hermes** — Decisión, alternativas de marca, recall y patrones de preferencia; mantiene lista y memoria del usuario.
+- **Diferenciador** — A diferencia de un asistente genérico (incluido Meta AI): egocéntrico, en español mexicano, aprende el entorno y mantiene contexto accionable.
+
+### Stack
+
+`Ray-Ban Meta Gen 2` · `Swift` · `iOS` · `Cloudflare Workers` · `Claude` · `GPT-4o` · `AssemblyAI` · `ElevenLabs` · `Gemini Live API` · `RAG`
+
+[Repositorio](https://github.com/platanus-hack/platanus-hack-26-mx-team-5)
+
+[Demo](https://web-seven-silk-77.vercel.app)
+
+[Video](https://youtu.be/3hYi-2AfgM8?si=REXO6YFQ00gzNTMe)

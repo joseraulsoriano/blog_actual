@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteNav } from "@/components/site/site-nav";
-import { SiteFooter } from "@/components/site/site-footer";
+import { PrivateUnlock } from "@/components/site/private-unlock";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Blog of Chasse — Legado digital de José Raúl Soriano",
-    template: "%s — Blog of Chasse",
+    default: "José Raúl Soriano — Legado digital",
+    template: "%s — José Raúl Soriano",
   },
   description:
-    "El legado digital de José Raúl Soriano: recuerdos, proyectos, eventos y viajes, desde 2021 hasta hoy.",
+    "El legado digital de José Raúl Soriano: recuerdos, proyectos, eventos y viajes.",
 };
 
 export default function RootLayout({
@@ -33,10 +33,10 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="crt min-h-full flex flex-col bg-background text-foreground">
+      <body className="crt min-h-full flex flex-col bg-black text-white">
         <SiteNav />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
+        <PrivateUnlock />
+        <main className="flex-1 pb-20 md:pb-24">{children}</main>
       </body>
     </html>
   );

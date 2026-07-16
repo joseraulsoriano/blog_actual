@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getEntry } from "@/lib/content";
 import { mdxComponents } from "@/components/retro/mdx";
-import { PromptLine, TerminalWindow } from "@/components/retro/terminal-window";
+import { PageHeader, PageShell } from "@/components/site/page-shell";
 
 export const metadata: Metadata = {
   title: "Bio",
@@ -16,13 +16,15 @@ export default function BioPage() {
   if (!bio) notFound();
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <PromptLine command="cat ~/bio.mdx" className="mb-4" />
-      <TerminalWindow title="bio.mdx — chasse">
-        <article>
-          <MDXRemote source={bio.content} components={mdxComponents} />
-        </article>
-      </TerminalWindow>
-    </div>
+    <PageShell>
+      <PageHeader
+        eyebrow="Sobre mí"
+        title={bio.data.title || "Bio"}
+        lede="Un poco de contexto antes de mirar el resto del legado."
+      />
+      <article className="max-w-prose">
+        <MDXRemote source={bio.content} components={mdxComponents} />
+      </article>
+    </PageShell>
   );
 }
