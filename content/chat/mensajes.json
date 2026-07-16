@@ -10,5 +10,11 @@
     "nombre": "test-proxy",
     "texto": "hola desde proxy 190903",
     "fecha": "2026-07-16T01:09:04.971Z"
+  },
+  {
+    "id": "m-mrmt9mso-6729z",
+    "nombre": "direct",
+    "texto": "hola directo",
+    "fecha": "2026-07-16T01:09:07.368Z"
   }
 ]
