@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { rolSesion } from "@/lib/admin/auth";
-import { salir } from "./actions";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
@@ -36,7 +35,7 @@ export default async function AdminLayout({
             size="sm"
             render={<Link href="/">Ver sitio</Link>}
           />
-          <form action={salir}>
+          <form action="/blog/api/privado/salir" method="post">
             <Button variant="outline" size="sm" type="submit">
               Salir
             </Button>

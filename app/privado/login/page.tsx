@@ -9,11 +9,14 @@ import {
   MAX_INTENTOS,
   preguntaAcertijo,
 } from "@/lib/admin/gate";
-import { intentarPalabra, intentarLogin } from "./actions";
 import { PageHeader, PageShell } from "@/components/site/page-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+// Forms usan API routes (no Server Actions) para funcionar bajo el proxy /blog.
+const LOGIN_ACTION = "/blog/api/privado/login";
+const PALABRA_ACTION = "/blog/api/privado/palabra";
 
 export const metadata: Metadata = {
   title: "Acceso privado",
@@ -68,7 +71,7 @@ export default async function LoginPage({
               Intentos: {left}/{MAX_INTENTOS}
             </p>
           )}
-          <form action={intentarPalabra} className="space-y-5">
+          <form action={PALABRA_ACTION} method="post" className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="palabra">Palabra</Label>
               <Input
@@ -104,7 +107,7 @@ export default async function LoginPage({
             Contraseña incorrecta.
           </p>
         ) : null}
-        <form action={intentarLogin} className="space-y-5">
+        <form action={LOGIN_ACTION} method="post" className="space-y-5">
           <div className="space-y-2">
             <Label htmlFor="password">Contraseña</Label>
             <Input
