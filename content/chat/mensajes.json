@@ -16,5 +16,11 @@
     "nombre": "direct",
     "texto": "hola directo",
     "fecha": "2026-07-16T01:09:07.368Z"
+  },
+  {
+    "id": "m-mrmtb4pc-4ruda",
+    "nombre": "User 1",
+    "texto": "hola pruebas unitarias del chat",
+    "fecha": "2026-07-16T01:10:17.232Z"
   }
 ]
