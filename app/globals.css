@@ -164,3 +164,175 @@
     animation: none;
   }
 }
+
+/* ── Pizarrón de investigación (/bio) — el único acento de color del sitio ── */
+:root {
+  --thread: oklch(0.58 0.21 27);
+  --thread-glow: oklch(0.58 0.21 27 / 45%);
+}
+
+.case-board {
+  background-color: oklch(0.03 0 0);
+  background-image:
+    radial-gradient(ellipse at 50% 20%, oklch(1 0 0 / 5%), transparent 65%),
+    radial-gradient(oklch(1 0 0 / 9%) 1px, transparent 1.4px),
+    radial-gradient(oklch(1 0 0 / 6%) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    17px 17px,
+    9px 9px;
+  background-position:
+    0 0,
+    0 0,
+    4px 6px;
+  box-shadow: inset 0 0 60px oklch(0 0 0 / 65%);
+}
+
+.case-card {
+  transform: rotate(var(--tilt, 0deg)) translateY(var(--jitter, 0px));
+}
+
+.case-card-body {
+  box-shadow: 0 6px 16px oklch(0 0 0 / 45%);
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s ease;
+}
+
+.case-card:hover > .case-card-body,
+.case-card:focus-within > .case-card-body {
+  transform: translateY(-6px) scale(1.015);
+  border-color: oklch(1 0 0 / 32%);
+  box-shadow: 0 16px 30px oklch(0 0 0 / 60%);
+}
+
+.case-card:hover,
+.case-card:focus-within {
+  z-index: 6;
+}
+
+/* Prosa MDX dentro de una tarjeta anclada: compacta, no la escala de un artículo. */
+.case-section-prose :where(p) {
+  margin-bottom: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.case-section-prose :where(ul, ol) {
+  margin-bottom: 0.4rem;
+  padding-left: 1.1rem;
+}
+
+.case-section-prose :where(li) {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 0.35rem;
+}
+
+.case-section-prose :where(blockquote) {
+  margin-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.case-section-prose :where(p, li, blockquote):last-child {
+  margin-bottom: 0;
+}
+
+.case-pin {
+  background: radial-gradient(
+    circle at 35% 30%,
+    oklch(0.85 0.15 27) 0%,
+    var(--thread) 55%,
+    oklch(0.4 0.18 27) 100%
+  );
+  box-shadow:
+    0 2px 3px oklch(0 0 0 / 70%),
+    0 0 8px var(--thread-glow);
+}
+
+.case-stamp {
+  border: 2px solid var(--thread);
+  color: var(--thread);
+  text-shadow: 0 0 10px var(--thread-glow);
+  animation: stamp-punch 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+@keyframes pin-drop {
+  from {
+    opacity: 0;
+    transform: rotate(var(--tilt, 0deg)) translateY(calc(var(--jitter, 0px) - 16px)) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(var(--tilt, 0deg)) translateY(var(--jitter, 0px)) scale(1);
+  }
+}
+
+/* Vaivén ambiental: la tarjeta nunca queda del todo quieta una vez clavada. */
+@keyframes case-sway {
+  0% {
+    transform: rotate(var(--tilt, 0deg)) translateY(var(--jitter, 0px));
+  }
+  100% {
+    transform: rotate(calc(var(--tilt, 0deg) + 0.7deg)) translateY(calc(var(--jitter, 0px) - 3px));
+  }
+}
+
+.case-board[data-in-view="true"] .case-card {
+  animation:
+    pin-drop 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms) both,
+    case-sway 5s ease-in-out calc(var(--delay, 0ms) + 0.6s) infinite alternate;
+}
+
+@keyframes thread-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.85;
+  }
+}
+
+@keyframes thread-breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.case-board[data-in-view="true"] .case-thread {
+  animation:
+    thread-in 0.9s ease-out 0.3s both,
+    thread-breathe 4s ease-in-out 1.2s infinite alternate;
+}
+
+@keyframes stamp-punch {
+  from {
+    opacity: 0;
+    transform: rotate(-5deg) scale(1.5);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-5deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-card-body {
+    transition: none;
+  }
+  .case-stamp,
+  .case-board[data-in-view="true"] .case-card,
+  .case-board[data-in-view="true"] .case-thread {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  .case-card {
+    transform: rotate(var(--tilt, 0deg)) !important;
+  }
+}

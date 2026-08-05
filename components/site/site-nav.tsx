@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/", label: "Inicio", icon: Home },
-  { href: "/bio", label: "Bio", icon: UserRound },
+  { href: "/bio", label: "Expediente", icon: UserRound },
   { href: "/proyectos", label: "Proyectos", icon: FolderKanban },
   { href: "/eventos", label: "Eventos", icon: Ticket },
   { href: "/viajes", label: "Viajes", icon: MapPinned },

@@ -1,4 +1,5 @@
-import { getRecuerdos, getViajes } from "@/lib/content";
+import { getViajes } from "@/lib/content";
+import { leerChat } from "@/lib/chat";
 import { HomeGlobeHero } from "@/components/home/home-globe-hero";
 import { HomeArchivo } from "@/components/home/home-archivo";
 import { HomeUltimo } from "@/components/home/home-ultimo";
@@ -9,7 +10,7 @@ export default async function Home({
   searchParams: Promise<{ sellado?: string }>;
 }) {
   const { sellado } = await searchParams;
-  const ultimo = getRecuerdos()[0] ?? null;
+  const mensajes = await leerChat();
   const cities = getViajes().map((v) => ({
     slug: v.slug,
     ciudad: v.data.ciudad,
@@ -29,11 +30,8 @@ export default async function Home({
       <HomeGlobeHero cities={cities} />
 
       {/* Pulso tipográfico */}
-      <p
-        className="relative mx-auto max-w-md px-5 pb-20 text-center text-pretty text-base italic leading-relaxed text-white/45 sm:pb-28 sm:text-lg"
-        aria-hidden={false}
-      >
-        «Sin sacrificio no hay victoria.»
+      <p className="relative mx-auto max-w-sm px-5 pb-24 pt-2 text-center font-mono text-[11px] leading-relaxed tracking-[0.28em] text-white/35 sm:pb-32 sm:text-xs">
+        sin sacrificio no hay victoria
       </p>
 
       {/* Acto 2 — puertas */}
@@ -43,12 +41,12 @@ export default async function Home({
       />
       <HomeArchivo />
 
-      {/* Acto 3 — un recuerdo */}
+      {/* Acto 3 — chat general */}
       <div
         className="pointer-events-none mx-auto h-px w-12 bg-white/40 shadow-[0_0_12px_oklch(1_0_0_/_0.4)]"
         aria-hidden
       />
-      {ultimo ? <HomeUltimo post={ultimo} /> : null}
+      <HomeUltimo mensajes={mensajes} />
     </div>
   );
 }
