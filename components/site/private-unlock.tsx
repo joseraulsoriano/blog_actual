@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { desbloquearLogin } from "@/app/privado/login/actions";
 
 /** Atajo: Ctrl/Cmd + Shift + L → arma ~10s. */
 /** Secuencia: "legado" → emite puerta firmada y abre login. */
@@ -34,8 +33,17 @@ export function PrivateUnlock() {
       armedUntil.current = 0;
       buffer.current = "";
       startTransition(async () => {
-        await desbloquearLogin();
-        router.push("/privado/login");
+        try {
+          // Route Handler (no Server Action): atraviesa el proxy /blog.
+          const res = await fetch("/blog/api/privado/unlock", {
+            method: "POST",
+            credentials: "same-origin",
+          });
+          if (!res.ok) return;
+          router.push("/privado/login");
+        } catch {
+          /* silencio: el atajo no debe ruidear la UI */
+        }
       });
     }
 

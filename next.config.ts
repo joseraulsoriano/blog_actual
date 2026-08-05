@@ -7,6 +7,27 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/**": ["./content/**/*"],
   },
+  // CSRF de Server Actions: el Host visible es el del portafolio (proxy CDN).
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        "joserauldev.qzz.io",
+        "blog-actual.vercel.app",
+        "localhost:3000",
+      ],
+    },
+  },
+  // Sin esto, https://blog-actual.vercel.app/ da 404 (Vercel NOT_FOUND).
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/blog",
+        permanent: false,
+        basePath: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

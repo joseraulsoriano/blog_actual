@@ -5,7 +5,6 @@ import { haySesion, haySesionUmbral } from "@/lib/admin/auth";
 import { getEventos, getProyectos, getRecuerdos, getViajes } from "@/lib/content";
 import { PageHeader } from "@/components/site/page-shell";
 import { Button } from "@/components/ui/button";
-import { salir } from "@/app/privado/(admin)/actions";
 
 export const metadata: Metadata = {
   title: "Umbral",
@@ -39,7 +38,7 @@ export default async function UmbralPage() {
             size="sm"
             render={<Link href="/">Sitio</Link>}
           />
-          <form action={salir}>
+          <form action="/blog/api/privado/salir" method="post">
             <Button variant="outline" size="sm" type="submit">
               Salir
             </Button>

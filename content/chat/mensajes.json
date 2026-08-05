@@ -1,0 +1,38 @@
+[
+  {
+    "id": "m-mrmslfoy-gr4gh",
+    "nombre": "anon",
+    "texto": "hola",
+    "fecha": "2026-07-16T00:50:18.418Z"
+  },
+  {
+    "id": "m-mrmt9ky3-pk0gf",
+    "nombre": "test-proxy",
+    "texto": "hola desde proxy 190903",
+    "fecha": "2026-07-16T01:09:04.971Z"
+  },
+  {
+    "id": "m-mrmt9mso-6729z",
+    "nombre": "direct",
+    "texto": "hola directo",
+    "fecha": "2026-07-16T01:09:07.368Z"
+  },
+  {
+    "id": "m-mrmtb4pc-4ruda",
+    "nombre": "User 1",
+    "texto": "hola pruebas unitarias del chat",
+    "fecha": "2026-07-16T01:10:17.232Z"
+  },
+  {
+    "id": "m-mrmxas73-3c0f3",
+    "nombre": "anon",
+    "texto": "Magui.mal",
+    "fecha": "2026-07-16T03:01:59.487Z"
+  },
+  {
+    "id": "m-mrmxbjhd-eh3lx",
+    "nombre": "Magui.mal",
+    "texto": "Hola",
+    "fecha": "2026-07-16T03:02:34.849Z"
+  }
+]
