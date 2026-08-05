@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AsciiGlobe, type CiudadGlobo } from "@/components/retro/ascii-globe";
-import { cn } from "@/lib/utils";
 
 export const FRASES_IDENTIDAD = [
   "Coleccionista de recuerdos.",
@@ -15,32 +14,20 @@ export const FRASES_IDENTIDAD = [
 
 function FraseRotator({ frases }: { frases: readonly string[] }) {
   const [i, setI] = useState(0);
-  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    let hideTimer: ReturnType<typeof setTimeout> | undefined;
     const id = setInterval(() => {
-      setVisible(false);
-      hideTimer = setTimeout(() => {
-        setI((n) => (n + 1) % frases.length);
-        setVisible(true);
-      }, 380);
+      setI((n) => (n + 1) % frases.length);
     }, 4800);
 
-    return () => {
-      clearInterval(id);
-      if (hideTimer) clearTimeout(hideTimer);
-    };
+    return () => clearInterval(id);
   }, [frases.length]);
 
   return (
     <p
-      className={cn(
-        "min-h-[1.4em] text-center text-pretty text-lg font-light tracking-[-0.02em] text-white/70 transition-opacity duration-500 sm:text-xl",
-        visible ? "opacity-100" : "opacity-0"
-      )}
+      className="min-h-[1.4em] text-center text-pretty text-lg font-light tracking-[-0.02em] text-white/70 sm:text-xl"
       aria-live="polite"
     >
       {frases[i]}
