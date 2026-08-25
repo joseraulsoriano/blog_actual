@@ -26,7 +26,7 @@ async function puertaValida(token: string | undefined): Promise<boolean> {
  * /privado/login sin cookie de puerta → 404 (no se puede teclear la URL).
  * El resto de /privado lo cubre el layout con sesión.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (pathname === "/privado/login" || pathname.startsWith("/privado/login/")) {
     const ok = await puertaValida(request.cookies.get(GATE_COOKIE)?.value);

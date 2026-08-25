@@ -5,7 +5,16 @@
 export type Campo = {
   name: string;
   label: string;
-  tipo: "texto" | "textarea" | "numero" | "fecha" | "datetime" | "select" | "fotos";
+  tipo:
+    | "texto"
+    | "textarea"
+    | "numero"
+    | "fecha"
+    | "datetime"
+    | "select"
+    | "fotos"
+    | "etapas"
+    | "tags";
   opciones?: string[]; // para select
   requerido?: boolean;
   paso?: string; // step para números (ej. "0.01")
@@ -21,6 +30,31 @@ export type EsquemaColeccion = {
 };
 
 export const ESQUEMAS: Record<string, EsquemaColeccion> = {
+  escritos: {
+    coleccion: "escritos",
+    titulo: "Escritos",
+    descripcion: "Artículos largos: lo técnico que sí se busca en Google.",
+    campos: [
+      { name: "title", label: "Título", tipo: "texto", requerido: true },
+      {
+        name: "resumen",
+        label: "Resumen",
+        tipo: "textarea",
+        requerido: true,
+        ayuda: "Es lo que se ve en Google y en la tarjeta de compartir.",
+      },
+      { name: "fecha", label: "Fecha", tipo: "fecha", requerido: true },
+      {
+        name: "tags",
+        label: "Tags",
+        tipo: "tags",
+        ayuda: "Separados por comas: nextjs, vercel, arquitectura",
+      },
+      { name: "portada", label: "Portada", tipo: "fotos" },
+    ],
+    plantillaBody:
+      "Arranca con el problema concreto, no con la introducción.\n\n## El problema\n\n## Cómo lo resolví\n\n```ts\n// el código va aquí\n```\n",
+  },
   recuerdos: {
     coleccion: "recuerdos",
     titulo: "Recuerdos",
@@ -38,6 +72,7 @@ export const ESQUEMAS: Record<string, EsquemaColeccion> = {
         tipo: "texto",
         ayuda: "Ruta interna o URL, ej. /proyectos/check-driver",
       },
+      { name: "fotos", label: "Fotos", tipo: "fotos" },
     ],
     plantillaBody: "",
   },
@@ -133,6 +168,7 @@ export const ESQUEMAS: Record<string, EsquemaColeccion> = {
         paso: "0.5",
       },
       { name: "resumen", label: "Resumen", tipo: "textarea" },
+      { name: "fotos", label: "Fotos", tipo: "fotos" },
     ],
     plantillaBody: "La historia completa del evento.\n",
   },
@@ -148,6 +184,13 @@ export const ESQUEMAS: Record<string, EsquemaColeccion> = {
       { name: "año", label: "Año (primera visita)", tipo: "numero", requerido: true },
       { name: "resumen", label: "Resumen", tipo: "textarea" },
       { name: "fotos", label: "Fotos", tipo: "fotos" },
+      {
+        name: "etapas",
+        label: "Etapas",
+        tipo: "etapas",
+        ayuda:
+          "Hechos fijos de la ciudad (mudanza, estudio…). Se mezclan con eventos y recuerdos en la línea de tiempo.",
+      },
     ],
     plantillaBody: "Bitácora del viaje.\n",
   },

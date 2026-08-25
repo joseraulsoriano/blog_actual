@@ -34,6 +34,8 @@ export type ProyectoMeta = {
   portafolioId?: string;
 };
 
+export type Foto = { src: string; alt: string };
+
 export type EventoMeta = {
   title: string;
   tipo: "hackathon" | "concierto" | "conferencia";
@@ -41,6 +43,7 @@ export type EventoMeta = {
   año: number;
   calificacion?: number;
   resumen?: string;
+  fotos?: Foto[];
 };
 
 export function getCollection<T>(dir: string): Entry<T>[] {
@@ -72,6 +75,7 @@ export type RecuerdoMeta = {
   /** ISO `yyyy-mm-dd` o `yyyy-mm-ddTHH:mm`. */
   fecha: string;
   enlace?: string;
+  fotos?: Foto[];
   /** @deprecated legado — usar body */
   title?: string;
   /** @deprecated legado — usar body */
@@ -102,7 +106,7 @@ export type ViajeMeta = {
   lon: number;
   año: number;
   resumen?: string;
-  fotos?: { src: string; alt: string }[];
+  fotos?: Foto[];
   /** Hechos fijos de la ciudad (estudio, etapas…) — se mezclan en la timeline. */
   etapas?: ViajeEtapa[];
 };
@@ -111,6 +115,28 @@ export function getViajes() {
   return getCollection<ViajeMeta>("viajes").sort(
     (a, b) => a.data.año - b.data.año
   );
+}
+
+/** Artículo largo: la escritura técnica del blog. */
+export type EscritoMeta = {
+  title: string;
+  resumen: string;
+  /** ISO `yyyy-mm-dd`. */
+  fecha: string;
+  tags?: string[];
+  portada?: Foto[];
+};
+
+export function getEscritos() {
+  return getCollection<EscritoMeta>("escritos").sort((a, b) =>
+    b.data.fecha.localeCompare(a.data.fecha)
+  );
+}
+
+/** Minutos de lectura a 200 palabras/minuto. */
+export function minutosLectura(texto: string): number {
+  const palabras = texto.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(palabras / 200));
 }
 
 export function getProyectos() {

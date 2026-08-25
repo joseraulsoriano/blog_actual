@@ -2,103 +2,70 @@
 
 import { useState } from "react";
 import type { Campo, EsquemaColeccion } from "@/lib/admin/schemas";
+import { CampoFotos, type Foto } from "@/components/admin/campo-fotos";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-type Foto = { src: string; alt: string };
+type Etapa = { año: number | string; hasta?: number | string; texto: string; href?: string };
 
-function CampoFotos({
-  name,
-  inicial,
-  coleccion,
-  slug,
-}: {
-  name: string;
-  inicial: Foto[];
-  coleccion: string;
-  slug: string;
-}) {
-  const [fotos, setFotos] = useState<Foto[]>(inicial);
-  const [subiendo, setSubiendo] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+/** Hechos fijos de una ciudad: año(–hasta) + texto, con enlace opcional. */
+function CampoEtapas({ name, inicial }: { name: string; inicial: Etapa[] }) {
+  const [etapas, setEtapas] = useState<Etapa[]>(inicial);
 
-  async function subir(file: File) {
-    setSubiendo(true);
-    setError(null);
-    try {
-      const fd = new FormData();
-      fd.set("file", file);
-      fd.set("coleccion", coleccion);
-      fd.set("slug", slug || "general");
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      if (!res.ok) throw new Error(await res.text());
-      const { src } = (await res.json()) as { src: string };
-      setFotos((f) => [...f, { src, alt: file.name.replace(/\.[^.]+$/, "") }]);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Error al subir");
-    } finally {
-      setSubiendo(false);
-    }
+  function actualizar(i: number, parche: Partial<Etapa>) {
+    setEtapas(etapas.map((e, j) => (j === i ? { ...e, ...parche } : e)));
   }
 
   return (
     <div className="space-y-2">
-      <input type="hidden" name={name} value={JSON.stringify(fotos)} />
-      {fotos.map((f, i) => (
+      <input type="hidden" name={name} value={JSON.stringify(etapas)} />
+      {etapas.map((e, i) => (
         <div key={i} className="flex flex-wrap items-center gap-2 text-sm">
-          <span className="text-accent">▣</span>
           <Input
-            value={f.src}
-            onChange={(e) =>
-              setFotos(fotos.map((x, j) => (j === i ? { ...x, src: e.target.value } : x)))
-            }
-            placeholder="/uploads/…"
-            className="w-64 font-mono text-xs"
+            value={String(e.año ?? "")}
+            onChange={(ev) => actualizar(i, { año: ev.target.value })}
+            placeholder="año"
+            inputMode="numeric"
+            className="w-20 font-mono text-xs"
           />
           <Input
-            value={f.alt}
-            onChange={(e) =>
-              setFotos(fotos.map((x, j) => (j === i ? { ...x, alt: e.target.value } : x)))
-            }
-            placeholder="descripción (alt)"
-            className="w-48 text-xs"
+            value={String(e.hasta ?? "")}
+            onChange={(ev) => actualizar(i, { hasta: ev.target.value })}
+            placeholder="hasta"
+            inputMode="numeric"
+            className="w-20 font-mono text-xs"
+          />
+          <Input
+            value={e.texto ?? ""}
+            onChange={(ev) => actualizar(i, { texto: ev.target.value })}
+            placeholder="qué pasó ahí"
+            className="w-64 text-xs"
+          />
+          <Input
+            value={e.href ?? ""}
+            onChange={(ev) => actualizar(i, { href: ev.target.value })}
+            placeholder="enlace (opcional)"
+            className="w-44 font-mono text-xs"
           />
           <Button
             type="button"
             variant="ghost"
             size="xs"
-            onClick={() => setFotos(fotos.filter((_, j) => j !== i))}
+            onClick={() => setEtapas(etapas.filter((_, j) => j !== i))}
           >
             rm
           </Button>
         </div>
       ))}
-      <div className="flex items-center gap-3">
-        <label className="cursor-pointer text-sm text-accent underline underline-offset-4">
-          {subiendo ? "subiendo…" : "+ subir foto"}
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            disabled={subiendo}
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) void subir(f);
-              e.target.value = "";
-            }}
-          />
-        </label>
-        <Button
-          type="button"
-          variant="ghost"
-          size="xs"
-          onClick={() => setFotos([...fotos, { src: "", alt: "" }])}
-        >
-          + añadir ruta manual
-        </Button>
-      </div>
-      {error ? <p className="text-xs text-destructive">{error}</p> : null}
+      <Button
+        type="button"
+        variant="ghost"
+        size="xs"
+        onClick={() => setEtapas([...etapas, { año: "", texto: "" }])}
+      >
+        + añadir etapa
+      </Button>
     </div>
   );
 }
@@ -179,6 +146,19 @@ function CampoInput({
           required={campo.requerido}
           className="w-56 font-mono"
         />
+      );
+    case "tags":
+      return (
+        <Input
+          id={name}
+          name={name}
+          defaultValue={Array.isArray(valor) ? valor.join(", ") : v}
+          placeholder="nextjs, vercel, arquitectura"
+        />
+      );
+    case "etapas":
+      return (
+        <CampoEtapas name={name} inicial={(valor as Etapa[]) ?? []} />
       );
     case "fotos":
       return (

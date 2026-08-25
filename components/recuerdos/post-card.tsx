@@ -5,6 +5,7 @@ import {
   formatFechaPost,
   textoRecuerdo,
 } from "@/lib/recuerdos";
+import { MediaGallery } from "@/components/site/media-gallery";
 import { cn } from "@/lib/utils";
 
 function labelEnlace(href: string): string {
@@ -22,9 +23,12 @@ function labelEnlace(href: string): string {
 export function PostCard({
   r,
   className,
+  permalink = true,
 }: {
   r: Entry<RecuerdoMeta>;
   className?: string;
+  /** En el feed la fecha lleva a la ficha; en la ficha ya no hace falta. */
+  permalink?: boolean;
 }) {
   const texto = textoRecuerdo(r);
   const iso = fechaRecuerdoISO(r.data.fecha);
@@ -34,22 +38,33 @@ export function PostCard({
       id={r.slug}
       className={cn("group scroll-mt-8 py-8 first:pt-0", className)}
     >
-      <time
-        className="block text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground"
-        dateTime={iso}
-      >
-        {formatFechaPost(r.data.fecha)}
-      </time>
+      {permalink ? (
+        <Link
+          href={`/recuerdos/${r.slug}`}
+          className="inline-block text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground transition-colors hover:text-primary"
+        >
+          <time dateTime={iso}>{formatFechaPost(r.data.fecha)}</time>
+        </Link>
+      ) : (
+        <time
+          className="block text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground"
+          dateTime={iso}
+        >
+          {formatFechaPost(r.data.fecha)}
+        </time>
+      )}
 
       <p className="mt-3 max-w-prose text-pretty text-[1.05rem] leading-[1.65] tracking-[-0.01em] text-foreground/90 sm:text-lg sm:leading-[1.7]">
         {texto}
       </p>
 
+      <MediaGallery fotos={r.data.fotos ?? []} className="mt-4 max-w-prose" />
+
       {r.data.enlace ? (
         <p className="mt-4">
           <Link
             href={r.data.enlace}
-            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-white/45 transition-colors hover:text-primary"
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-white/55 transition-colors hover:text-primary"
           >
             <span aria-hidden className="text-white/25">
               →

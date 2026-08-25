@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { CampoFotos, type Foto } from "@/components/admin/campo-fotos";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +14,7 @@ export function PostComposer({
   fecha,
   enlace,
   texto,
+  fotos = [],
   esNuevo,
   accion,
   accionEliminar,
@@ -21,6 +23,7 @@ export function PostComposer({
   fecha: string;
   enlace?: string;
   texto: string;
+  fotos?: Foto[];
   esNuevo: boolean;
   accion: (formData: FormData) => Promise<void>;
   accionEliminar?: (formData: FormData) => Promise<void>;
@@ -36,15 +39,12 @@ export function PostComposer({
     fechaParaInput(fecha) || ahora
   );
   const restantes = MAX - draft.length;
+  const slugEfectivo = esNuevo ? slugDesdeFecha(fechaVal) : slug;
 
   return (
     <form action={accion} className="mx-auto max-w-xl space-y-5">
       <input type="hidden" name="coleccion" value="recuerdos" />
-      <input
-        type="hidden"
-        name="slug"
-        value={esNuevo ? slugDesdeFecha(fechaVal) : slug}
-      />
+      <input type="hidden" name="slug" value={slugEfectivo} />
 
       <div className="border border-white/[0.12] bg-white/[0.02] p-4 sm:p-5">
         <Label htmlFor="body" className="sr-only">
@@ -58,16 +58,16 @@ export function PostComposer({
           required
           rows={5}
           placeholder="¿Qué quieres recordar?"
-          className="w-full resize-none bg-transparent text-base leading-relaxed text-foreground outline-none placeholder:text-white/30"
+          className="w-full resize-none bg-transparent text-base leading-relaxed text-foreground outline-none placeholder:text-white/50"
         />
         <div className="mt-3 flex items-center justify-between border-t border-white/[0.08] pt-3 text-xs text-muted-foreground">
           <span className={restantes < 40 ? "text-primary" : undefined}>
             {restantes}
           </span>
           {!esNuevo ? (
-            <span className="font-mono text-white/35">{slug}</span>
+            <span className="font-mono text-white/55">{slug}</span>
           ) : (
-            <span className="text-white/35">Se publica al instante</span>
+            <span className="text-white/55">Se publica al instante</span>
           )}
         </div>
       </div>
@@ -98,6 +98,16 @@ export function PostComposer({
             placeholder="/proyectos/…"
           />
         </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label className="text-muted-foreground">Fotos (opcional)</Label>
+        <CampoFotos
+          name="fm_fotos"
+          inicial={fotos}
+          coleccion="recuerdos"
+          slug={slugEfectivo}
+        />
       </div>
 
       <div className="flex flex-wrap items-center gap-3">

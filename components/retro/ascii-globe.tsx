@@ -15,7 +15,10 @@ const GW = 80;
 const GH = 40;
 const RX = GW / 2;
 const RY = GH / 2;
+/** Giro por defecto (home), en radianes/segundo. */
 const SPIN_SPEED = 0.12;
+/** Giro contemplativo para vistas de lectura (viajes). */
+export const SPIN_LENTO = 0.042;
 const LAND = ["@", "#", "%", "*", "+"];
 
 const deg = (d: number) => (d * Math.PI) / 180;
@@ -103,6 +106,7 @@ export function AsciiGlobe({
   className,
   size = "md",
   showLabels = false,
+  spinSpeed = SPIN_SPEED,
 }: {
   cities: CiudadGlobo[];
   selected?: string | null;
@@ -111,6 +115,8 @@ export function AsciiGlobe({
   size?: "md" | "lg";
   /** Etiquetas de ciudad al frente (home). */
   showLabels?: boolean;
+  /** Radianes/segundo del giro libre. Usa SPIN_LENTO para lectura. */
+  spinSpeed?: number;
 }) {
   const [rot, setRot] = useState(deg(-99));
   const [reduced, setReduced] = useState(false);
@@ -148,7 +154,7 @@ export function AsciiGlobe({
           setRot(cur + d * Math.min(1, 4.2 * dt));
         }
       } else if (!pausedRef.current) {
-        setRot(cur + SPIN_SPEED * dt);
+        setRot(cur + spinSpeed * dt);
       }
 
       raf = requestAnimationFrame(tick);
@@ -156,7 +162,7 @@ export function AsciiGlobe({
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target]);
+  }, [target, spinSpeed]);
 
   const shownRot = reduced && target !== null ? target : rot;
   const frame = useMemo(() => renderFrame(shownRot), [shownRot]);

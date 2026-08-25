@@ -64,19 +64,25 @@ export async function escribirArchivo(
     fs.writeFileSync(abs, contenido);
     return;
   }
-  const sha = await shaExistente(ruta);
-  const res = await githubApi(`contents/${ruta}`, {
-    method: "PUT",
-    body: JSON.stringify({
-      message: mensaje,
-      content: contenido.toString("base64"),
-      branch: BRANCH,
-      ...(sha ? { sha } : {}),
-    }),
-  });
-  if (!res.ok) {
-    throw new Error(`GitHub respondió ${res.status}: ${await res.text()}`);
+  // 409/422 = otra escritura ganó la carrera; releemos el sha y reintentamos.
+  let ultimo = "";
+  for (let intento = 0; intento < 3; intento++) {
+    const sha = await shaExistente(ruta);
+    const res = await githubApi(`contents/${ruta}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        message: mensaje,
+        content: contenido.toString("base64"),
+        branch: BRANCH,
+        ...(sha ? { sha } : {}),
+      }),
+    });
+    if (res.ok) return;
+    ultimo = `GitHub respondió ${res.status}: ${await res.text()}`;
+    if (res.status !== 409 && res.status !== 422) break;
+    await new Promise((r) => setTimeout(r, 250 * (intento + 1)));
   }
+  throw new Error(ultimo);
 }
 
 export async function borrarArchivo(rel: string, mensaje: string): Promise<void> {

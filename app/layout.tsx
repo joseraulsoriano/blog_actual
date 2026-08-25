@@ -23,6 +23,13 @@ export const metadata: Metadata = {
   },
   description:
     "El legado digital de José Raúl Soriano: recuerdos, proyectos, eventos y viajes.",
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { url: `${getSiteUrl()}/feed.xml`, title: "Escritos y recuerdos" },
+      ],
+    },
+  },
 };
 
 export default function RootLayout({

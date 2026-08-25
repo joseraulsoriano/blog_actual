@@ -1,15 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import type { ViajeEtapa } from "@/lib/content";
 import type { CityRelated } from "@/lib/viajes/related";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { MediaGallery } from "@/components/site/media-gallery";
 import { cn } from "@/lib/utils";
 
 const TIPO_LABEL: Record<string, string> = {
@@ -181,41 +175,7 @@ export function CityDetail({
         </ol>
       )}
 
-      {fotos.length > 0 ? (
-        <div className="grid grid-cols-2 gap-2 pt-2">
-          {fotos.map((f) => (
-            <Dialog key={f.src}>
-              <DialogTrigger
-                render={
-                  <button
-                    type="button"
-                    className="relative aspect-[4/3] overflow-hidden border border-white/15"
-                    aria-label={`Ampliar: ${f.alt}`}
-                  >
-                    <Image
-                      src={f.src}
-                      alt={f.alt}
-                      fill
-                      sizes="(max-width: 640px) 50vw, 240px"
-                      className="object-cover"
-                    />
-                  </button>
-                }
-              />
-              <DialogContent className="max-w-3xl border-white/15 bg-black p-2">
-                <DialogTitle className="px-2 pt-2 text-sm">{f.alt}</DialogTitle>
-                <Image
-                  src={f.src}
-                  alt={f.alt}
-                  width={1200}
-                  height={800}
-                  className="h-auto w-full object-contain"
-                />
-              </DialogContent>
-            </Dialog>
-          ))}
-        </div>
-      ) : null}
+      <MediaGallery fotos={fotos} className="pt-2" />
     </div>
   );
 }

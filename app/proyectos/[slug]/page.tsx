@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
 import { getEntry, getProyectos, type ProyectoMeta } from "@/lib/content";
-import { mdxComponents } from "@/components/retro/mdx";
+import { Prosa } from "@/components/retro/prosa";
 import { PageShell } from "@/components/site/page-shell";
 
 export function generateStaticParams() {
@@ -39,7 +38,7 @@ export default async function ProyectoPage({
         {p.data.title}
       </h1>
       <article className="max-w-prose">
-        <MDXRemote source={p.content} components={mdxComponents} />
+        <Prosa source={p.content} />
       </article>
       {p.data.enlace ? (
         <p className="mt-8 text-sm">

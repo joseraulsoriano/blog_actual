@@ -1,9 +1,22 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { agregarMensaje } from "@/lib/chat";
+import { ipDePeticion, limitar } from "@/lib/rate-limit";
 
 /** API pública del chat — atraviesa el proxy /blog (Server Actions no lo hacen). */
 export async function POST(request: Request) {
+  // Cada mensaje es un commit + un redeploy: sin techo, un bucle quema builds.
+  const limite = limitar(`chat:${ipDePeticion(request)}`, {
+    max: 5,
+    ventanaMs: 10 * 60 * 1000,
+  });
+  if (!limite.ok) {
+    return NextResponse.json(
+      { ok: false, error: "demasiados" },
+      { status: 429, headers: { "Retry-After": String(limite.esperaSegundos) } }
+    );
+  }
+
   let formData: FormData;
   try {
     formData = await request.formData();

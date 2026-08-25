@@ -1,10 +1,12 @@
 "use server";
 
 import matter from "gray-matter";
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { escribirArchivo } from "@/lib/admin/store";
 import { esSlugValido } from "@/lib/admin/schemas";
+import { limitar } from "@/lib/rate-limit";
 
 function slugify(s: string): string {
   return s
@@ -24,6 +26,16 @@ export async function enviarPropuesta(formData: FormData) {
   // Honeypot: si se llena, fingimos OK
   if (String(formData.get("website") ?? "").trim()) {
     redirect("/proponer?ok=1");
+  }
+
+  // Cada propuesta crea un archivo y dispara un deploy.
+  const cabeceras = await headers();
+  const ip =
+    cabeceras.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    cabeceras.get("x-real-ip") ??
+    "desconocida";
+  if (!limitar(`propuesta:${ip}`, { max: 3, ventanaMs: 60 * 60 * 1000 }).ok) {
+    redirect("/proponer?error=limite");
   }
 
   const title = String(formData.get("title") ?? "").trim();

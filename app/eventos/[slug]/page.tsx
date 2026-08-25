@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
 import { getEntry, getEventos, type EventoMeta } from "@/lib/content";
-import { mdxComponents } from "@/components/retro/mdx";
+import { Prosa } from "@/components/retro/prosa";
+import { MediaGallery } from "@/components/site/media-gallery";
 import { PageShell } from "@/components/site/page-shell";
 
 export function generateStaticParams() {
@@ -41,8 +41,10 @@ export default async function EventoPage({
         {e.data.title}
       </h1>
       <article className="max-w-prose">
-        <MDXRemote source={e.content} components={mdxComponents} />
+        <Prosa source={e.content} />
       </article>
+
+      <MediaGallery fotos={e.data.fotos ?? []} columnas={3} className="mt-10" />
     </PageShell>
   );
 }

@@ -17,17 +17,51 @@ function construirData(coleccion: string, formData: FormData) {
   const data: Record<string, unknown> = {};
   for (const campo of esquema.campos) {
     const crudo = formData.get(`fm_${campo.name}`);
+    if (campo.tipo === "tags") {
+      const tags = String(crudo ?? "")
+        .split(",")
+        .map((t) => t.trim().toLowerCase())
+        .filter(Boolean);
+      if (tags.length) data[campo.name] = [...new Set(tags)];
+      continue;
+    }
+    if (campo.tipo === "etapas") {
+      try {
+        const etapas = JSON.parse(String(crudo ?? "[]")) as {
+          año: unknown;
+          hasta?: unknown;
+          texto?: string;
+          href?: string;
+        }[];
+        const limpias = etapas
+          .filter((e) => String(e.texto ?? "").trim() && Number(e.año))
+          .map((e) => ({
+            año: Number(e.año),
+            ...(Number(e.hasta) ? { hasta: Number(e.hasta) } : {}),
+            texto: String(e.texto).trim(),
+            ...(String(e.href ?? "").trim()
+              ? { href: String(e.href).trim() }
+              : {}),
+          }))
+          .sort((a, b) => a.año - b.año);
+        if (limpias.length) data[campo.name] = limpias;
+      } catch {
+        // Entrada corrupta: mejor no escribir el campo que romper el YAML.
+      }
+      continue;
+    }
     if (campo.tipo === "fotos") {
       try {
         const fotos = JSON.parse(String(crudo ?? "[]")) as {
           src: string;
           alt: string;
         }[];
-        data[campo.name] = fotos
+        const limpias = fotos
           .filter((f) => f.src?.trim())
           .map((f) => ({ src: f.src.trim(), alt: f.alt?.trim() ?? "" }));
+        if (limpias.length) data[campo.name] = limpias;
       } catch {
-        data[campo.name] = [];
+        // Entrada corrupta: mejor no escribir el campo.
       }
       continue;
     }

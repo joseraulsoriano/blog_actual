@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MexicoMap, type CiudadMapa } from "@/components/viajes/mexico-map";
+import {
+  AsciiGlobe,
+  SPIN_LENTO,
+  type CiudadGlobo,
+} from "@/components/retro/ascii-globe";
 import { CityDetail } from "@/components/viajes/city-detail";
 import type { ViajeEtapa } from "@/lib/content";
 import type { CityRelated } from "@/lib/viajes/related";
@@ -14,7 +18,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-export type ViajeItem = CiudadMapa & {
+export type ViajeItem = CiudadGlobo & {
   pais: string;
   año: number;
   resumen?: string;
@@ -76,12 +80,17 @@ export function ViajesExplorer({
 
   return (
     <div className="space-y-4 sm:space-y-5">
-      <MexicoMap
-        cities={viajes}
-        selected={selected}
-        onSelect={selectCity}
-        className="mx-auto max-h-[min(40vh,20rem)] [&_svg]:max-h-[min(40vh,20rem)] lg:max-h-[min(48vh,26rem)] lg:[&_svg]:max-h-[min(48vh,26rem)]"
-      />
+      {/* Mismo planeta que el home, girando más lento para leer las etiquetas. */}
+      <div className="flex justify-center overflow-visible py-1 sm:py-2">
+        <AsciiGlobe
+          cities={viajes}
+          selected={selected}
+          onSelect={selectCity}
+          size="lg"
+          showLabels
+          spinSpeed={SPIN_LENTO}
+        />
+      </div>
 
       <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:overflow-visible sm:px-0">
         <ul className="flex gap-2 pb-1 sm:flex-wrap" role="list">

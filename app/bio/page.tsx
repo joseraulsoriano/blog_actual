@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Download } from "lucide-react";
-import { MDXRemote } from "next-mdx-remote/rsc";
 import { getEntry } from "@/lib/content";
-import { mdxComponents } from "@/components/retro/mdx";
+import { Prosa } from "@/components/retro/prosa";
 import { PageShell } from "@/components/site/page-shell";
 import { CaseStamp } from "@/components/detective/case-stamp";
 import { CaseBoard } from "@/components/detective/case-board";
@@ -57,7 +56,7 @@ export default function BioPage() {
           aria-hidden
         />
         <article className="mt-6 max-w-prose sm:mt-8">
-          <MDXRemote source={intro} components={mdxComponents} />
+          <Prosa source={intro} />
         </article>
       </header>
 
@@ -79,7 +78,7 @@ export default function BioPage() {
               title={section.title}
               index={i}
             >
-              <MDXRemote source={section.body} components={mdxComponents} />
+              <Prosa source={section.body} />
             </CaseSectionCard>
           ))}
         </CaseBoard>

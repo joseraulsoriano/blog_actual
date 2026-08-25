@@ -104,7 +104,7 @@ export function HomeUltimo({ mensajes: iniciales }: { mensajes: ChatMensaje[] })
       aria-labelledby="ultimo-heading"
     >
       <div className="mx-auto max-w-lg">
-        <p className="mb-5 flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-[0.28em] text-white/35">
+        <p className="mb-5 flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-[0.28em] text-white/55">
           <span
             className="inline-block h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_oklch(1_0_0_/_0.85)]"
             aria-hidden
@@ -128,7 +128,7 @@ export function HomeUltimo({ mensajes: iniciales }: { mensajes: ChatMensaje[] })
               aria-hidden
             >
               <span className="h-1 w-1 rounded-full bg-primary/70 shadow-[0_0_6px_oklch(1_0_0_/_0.8)]" />
-              <span className="font-mono text-[8px] tracking-[0.35em] text-white/25">
+              <span className="font-mono text-[8px] tracking-[0.35em] text-white/55">
                 LEGADO
               </span>
             </div>
@@ -153,14 +153,14 @@ export function HomeUltimo({ mensajes: iniciales }: { mensajes: ChatMensaje[] })
                       <p className="truncate text-[11px] text-primary/90">
                         sala general
                       </p>
-                      <p className="text-[9px] tracking-wide text-white/45">
+                      <p className="text-[9px] tracking-wide text-white/55">
                         {hilo.length} mensaje{hilo.length === 1 ? "" : "s"}
                       </p>
                     </div>
                   </div>
                   <Link
                     href="/recuerdos"
-                    className="text-[9px] tracking-[0.14em] text-white/30 transition-colors hover:text-primary"
+                    className="text-[9px] tracking-[0.14em] text-white/55 transition-colors hover:text-primary"
                   >
                     archivo →
                   </Link>
@@ -171,14 +171,14 @@ export function HomeUltimo({ mensajes: iniciales }: { mensajes: ChatMensaje[] })
                   className="flex max-h-52 flex-col gap-3 overflow-y-auto px-3 py-3 sm:max-h-60 sm:px-3.5 sm:py-3.5"
                 >
                   {hilo.length === 0 ? (
-                    <li className="py-6 text-center text-[10px] tracking-wide text-white/25">
+                    <li className="py-6 text-center text-[10px] tracking-wide text-white/55">
                       Nadie ha escrito aún. Sé el primero.
                     </li>
                   ) : (
                     hilo.map((m) => (
                       <li key={m.id} className="flex gap-2.5">
                         <span
-                          className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-[8px] text-white/40"
+                          className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-[8px] text-white/55"
                           aria-hidden
                         >
                           {inicial(m.nombre)}
@@ -186,7 +186,7 @@ export function HomeUltimo({ mensajes: iniciales }: { mensajes: ChatMensaje[] })
                         <div className="min-w-0 flex-1">
                           <p className="flex flex-wrap items-baseline gap-x-1.5 text-[10px]">
                             <span className="text-primary/85">{m.nombre}</span>
-                            <span className="text-white/25">
+                            <span className="text-white/55">
                               {haceCuanto(m.fecha)}
                             </span>
                           </p>
@@ -222,7 +222,7 @@ export function HomeUltimo({ mensajes: iniciales }: { mensajes: ChatMensaje[] })
                     maxLength={24}
                     placeholder="nombre"
                     defaultValue="anon"
-                    className="mb-1.5 w-full bg-transparent text-[10px] text-white/50 outline-none placeholder:text-white/20"
+                    className="mb-1.5 w-full bg-transparent text-[10px] text-white/50 outline-none placeholder:text-white/50"
                   />
                   <div className="flex items-center gap-2">
                     <label className="sr-only" htmlFor="chat-texto">
@@ -236,18 +236,18 @@ export function HomeUltimo({ mensajes: iniciales }: { mensajes: ChatMensaje[] })
                       maxLength={240}
                       placeholder="Escribe un comentario…"
                       disabled={pending}
-                      className="min-w-0 flex-1 bg-transparent text-[11px] text-primary outline-none placeholder:text-white/30 disabled:opacity-50"
+                      className="min-w-0 flex-1 bg-transparent text-[11px] text-primary outline-none placeholder:text-white/50 disabled:opacity-50"
                     />
                     <button
                       type="submit"
                       disabled={pending}
-                      className="shrink-0 text-[10px] tracking-[0.12em] text-white/45 transition-colors hover:text-primary disabled:opacity-40"
+                      className="shrink-0 text-[10px] tracking-[0.12em] text-white/55 transition-colors hover:text-primary disabled:opacity-40"
                     >
                       {pending ? "…" : "enviar →"}
                     </button>
                   </div>
                   {error ? (
-                    <p className="mt-1.5 text-[9px] text-white/35" role="status">
+                    <p className="mt-1.5 text-[9px] text-white/55" role="status">
                       No se pudo enviar. Intenta de nuevo.
                     </p>
                   ) : null}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { ProyectoCategoria } from "@/lib/content";
 import { cn } from "@/lib/utils";
@@ -29,14 +29,88 @@ const CATEGORIAS: { id: ProyectoCategoria; label: string }[] = [
   { id: "ux", label: "UX" },
 ];
 
+const LABEL = new Map(CATEGORIAS.map((c) => [c.id, c.label]));
+
+/** Sin acentos ni mayúsculas: "diseño" encuentra "Diseno". */
+function normalizar(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function Chip({
+  activo,
+  onClick,
+  children,
+  n,
+}: {
+  activo: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+  n: number;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={activo}
+      className={cn(
+        "inline-flex min-h-10 items-center gap-2 border px-3.5 text-xs uppercase tracking-[0.14em] transition-colors",
+        activo
+          ? "border-white/45 bg-white/[0.1] text-primary"
+          : "border-white/15 text-muted-foreground hover:border-white/30 hover:text-foreground"
+      )}
+    >
+      {children}
+      <span className="tabular-nums text-white/55">{n}</span>
+    </button>
+  );
+}
+
+function TarjetaProyecto({ p }: { p: ProyectoListItem }) {
+  return (
+    <li>
+      <Link
+        href={`/proyectos/${p.slug}`}
+        className={cn(
+          "group flex h-full flex-col border border-white/[0.12] bg-white/[0.02] p-5",
+          "transition-colors hover:border-white/35 hover:bg-white/[0.05]"
+        )}
+      >
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+          {LABEL.get(p.categoria) ?? p.categoria}
+          <span className="float-right tabular-nums text-white/55">
+            {p.año}
+          </span>
+        </p>
+
+        <h3 className="mt-3 text-pretty text-lg leading-snug tracking-[-0.02em] text-primary group-hover:neon-text sm:text-xl">
+          {p.title}
+        </h3>
+
+        <p className="mt-2.5 line-clamp-3 text-pretty text-sm leading-relaxed text-foreground/70">
+          {p.resumen}
+        </p>
+
+        <p className="mt-4 flex items-center justify-between pt-1 text-[10px] uppercase tracking-[0.16em] text-white/55">
+          <span>{p.origen ?? ""}</span>
+          <span className="text-white/55 transition-colors group-hover:text-primary">
+            Ver ficha →
+          </span>
+        </p>
+      </Link>
+    </li>
+  );
+}
+
 export function ProyectosExplorer({
   proyectos,
 }: {
   proyectos: ProyectoListItem[];
 }) {
   const [cat, setCat] = useState<ProyectoCategoria | null>(null);
-  const [slug, setSlug] = useState<string | null>(null);
-  const detalleRef = useRef<HTMLElement>(null);
+  const [q, setQ] = useState("");
 
   const counts = useMemo(() => {
     const m = new Map<ProyectoCategoria, number>();
@@ -46,138 +120,90 @@ export function ProyectosExplorer({
     return m;
   }, [proyectos]);
 
-  const deCategoria = useMemo(
-    () => (cat ? proyectos.filter((p) => p.categoria === cat) : []),
-    [proyectos, cat]
-  );
-
-  const activo = slug
-    ? (proyectos.find((p) => p.slug === slug) ?? null)
-    : null;
-
-  useEffect(() => {
-    if (!activo || !detalleRef.current) return;
-    detalleRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [activo]);
-
-  function elegirCategoria(id: ProyectoCategoria) {
-    setCat((prev) => (prev === id ? null : id));
-    setSlug(null);
-  }
-
-  function elegirProyecto(s: string) {
-    setSlug(s);
-  }
+  const visibles = useMemo(() => {
+    const term = normalizar(q.trim());
+    return proyectos.filter((p) => {
+      if (cat && p.categoria !== cat) return false;
+      if (!term) return true;
+      return normalizar(`${p.title} ${p.resumen} ${p.origen ?? ""}`).includes(
+        term
+      );
+    });
+  }, [proyectos, cat, q]);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-          Categorías
-        </h2>
-        <p className="mb-4 text-sm text-muted-foreground">
-          {proyectos.length} proyectos. Elige una categoría para ver la lista.
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center gap-3">
+        <label htmlFor="buscar-proyecto" className="sr-only">
+          Buscar proyecto
+        </label>
+        <input
+          id="buscar-proyecto"
+          type="search"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Buscar por nombre o tema…"
+          className={cn(
+            "min-h-11 w-full max-w-sm border border-white/15 bg-transparent px-3.5 text-sm text-foreground",
+            "outline-none transition-colors placeholder:text-white/50",
+            "focus-visible:border-white/45"
+          )}
+        />
+        <p
+          className="text-xs tabular-nums text-muted-foreground"
+          aria-live="polite"
+        >
+          {visibles.length} de {proyectos.length}
         </p>
-        <ul className="flex flex-wrap gap-2" role="list">
-          {CATEGORIAS.map((c) => {
-            const n = counts.get(c.id) ?? 0;
-            if (n === 0) return null;
-            const active = cat === c.id;
-            return (
-              <li key={c.id}>
-                <button
-                  type="button"
-                  onClick={() => elegirCategoria(c.id)}
-                  className={cn(
-                    "inline-flex min-h-10 items-center gap-2 border px-3.5 text-xs uppercase tracking-[0.14em] transition-colors",
-                    active
-                      ? "border-white/45 bg-white/[0.1] text-primary"
-                      : "border-white/15 text-muted-foreground hover:border-white/30 hover:text-foreground"
-                  )}
-                >
-                  {c.label}
-                  <span className="tabular-nums text-white/35">{n}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
       </div>
 
-      {cat ? (
-        <div>
-          <h2 className="mb-3 text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-            {CATEGORIAS.find((c) => c.id === cat)?.label} · {deCategoria.length}
-          </h2>
-          <ul className="divide-y divide-white/[0.07] border-y border-white/[0.07]">
-            {deCategoria.map((p) => {
-              const on = slug === p.slug;
-              return (
-                <li key={p.slug}>
-                  <button
-                    type="button"
-                    onClick={() => elegirProyecto(p.slug)}
-                    className={cn(
-                      "flex w-full min-h-12 items-baseline justify-between gap-4 px-1 py-3.5 text-left transition-colors",
-                      on
-                        ? "text-primary"
-                        : "text-foreground/80 hover:text-primary"
-                    )}
-                  >
-                    <span className="text-base tracking-[-0.01em] sm:text-lg">
-                      {p.title}
-                    </span>
-                    <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                      {p.año}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ) : (
-        <p className="text-sm text-muted-foreground">
-          Selecciona una categoría para desplegar los proyectos.
-        </p>
-      )}
-
-      {activo ? (
-        <article
-          ref={detalleRef}
-          id={activo.slug}
-          className="scroll-mt-24 border border-white/[0.12] bg-white/[0.02] p-5 sm:p-7"
-        >
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-            {CATEGORIAS.find((c) => c.id === activo.categoria)?.label}
-            {activo.origen ? ` · ${activo.origen}` : ""} · {activo.año}
-          </p>
-          <h3 className="mt-3 text-2xl tracking-[-0.02em] text-primary neon-text sm:text-3xl">
-            {activo.title}
-          </h3>
-          <p className="mt-4 max-w-2xl text-pretty text-sm leading-relaxed text-foreground/80 sm:text-base">
-            {activo.resumen}
-          </p>
-          <div className="mt-6 flex flex-wrap gap-4">
-            <Link
-              href={`/proyectos/${activo.slug}`}
-              className="text-sm text-primary underline-offset-4 hover:underline"
-            >
-              Leer ficha completa →
-            </Link>
-            {activo.enlace ? (
-              <a
-                href={activo.enlace}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+      <ul className="flex flex-wrap gap-2" role="list">
+        <li>
+          <Chip activo={cat === null} onClick={() => setCat(null)} n={proyectos.length}>
+            Todos
+          </Chip>
+        </li>
+        {CATEGORIAS.map((c) => {
+          const n = counts.get(c.id) ?? 0;
+          if (n === 0) return null;
+          return (
+            <li key={c.id}>
+              <Chip
+                activo={cat === c.id}
+                onClick={() => setCat((prev) => (prev === c.id ? null : c.id))}
+                n={n}
               >
-                Enlace externo
-              </a>
-            ) : null}
-          </div>
-        </article>
-      ) : null}
+                {c.label}
+              </Chip>
+            </li>
+          );
+        })}
+      </ul>
+
+      {visibles.length === 0 ? (
+        <p className="border border-white/[0.12] bg-white/[0.02] p-6 text-sm text-muted-foreground">
+          Nada coincide con «{q}».{" "}
+          <button
+            type="button"
+            onClick={() => {
+              setQ("");
+              setCat(null);
+            }}
+            className="text-primary underline underline-offset-4"
+          >
+            Limpiar filtros
+          </button>
+        </p>
+      ) : (
+        <ul
+          role="list"
+          className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3"
+        >
+          {visibles.map((p) => (
+            <TarjetaProyecto key={p.slug} p={p} />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

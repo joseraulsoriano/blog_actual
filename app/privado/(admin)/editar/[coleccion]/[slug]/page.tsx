@@ -50,6 +50,11 @@ export default async function EditarPage({
           enlace={
             entry.data.enlace ? String(entry.data.enlace) : undefined
           }
+          fotos={
+            Array.isArray(entry.data.fotos)
+              ? (entry.data.fotos as { src: string; alt: string }[])
+              : []
+          }
           texto={textoRecuerdo({
             slug,
             data: entry.data as never,

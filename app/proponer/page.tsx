@@ -22,7 +22,11 @@ export default async function ProponerPage({
         title="¿Tienes un proyecto?"
         lede="Cuéntame la idea. Llega como pendiente; yo la reviso en el área privada."
       />
-      <PropuestaForm ok={ok === "1"} error={error === "1"} />
+      <PropuestaForm
+        ok={ok === "1"}
+        error={error === "1"}
+        limite={error === "limite"}
+      />
     </PageShell>
   );
 }

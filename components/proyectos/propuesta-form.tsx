@@ -7,9 +7,12 @@ import { Label } from "@/components/ui/label";
 export function PropuestaForm({
   ok,
   error,
+  limite,
 }: {
   ok?: boolean;
   error?: boolean;
+  /** Se alcanzó el tope de propuestas por hora. */
+  limite?: boolean;
 }) {
   if (ok) {
     return (
@@ -34,6 +37,12 @@ export function PropuestaForm({
       {error ? (
         <p className="text-sm text-destructive">
           Revisa título (mín. 3) y resumen (mín. 10 caracteres).
+        </p>
+      ) : null}
+
+      {limite ? (
+        <p className="text-sm text-destructive">
+          Ya enviaste varias propuestas seguidas. Intenta de nuevo en un rato.
         </p>
       ) : null}
 

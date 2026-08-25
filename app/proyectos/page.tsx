@@ -29,7 +29,7 @@ export default async function ProyectosPage() {
       <PageHeader
         eyebrow="Archivo"
         title="Proyectos"
-        lede={`${proyectos.length} piezas. Elige categoría, luego el proyecto.`}
+        lede={`${proyectos.length} piezas. Filtra por categoría o busca por nombre.`}
       />
 
       <p className="mb-10 max-w-md text-pretty text-base leading-relaxed text-foreground/85 sm:text-lg">

@@ -54,4 +54,42 @@ export const mdxComponents: MDXComponents = {
     <strong className="font-semibold text-primary" {...props} />
   ),
   hr: () => <hr className="my-10 border-white/[0.1]" />,
+
+  // rehype-pretty-code inyecta los colores; aquí solo va el contenedor.
+  pre: (props: ComponentPropsWithoutRef<"pre">) => (
+    <pre
+      className="mb-6 overflow-x-auto border border-white/[0.14] bg-white/[0.03] py-4 text-[0.82rem] leading-[1.65]"
+      {...props}
+    />
+  ),
+
+  // Imágenes de MDX: sin dimensiones conocidas, next/image no aplica.
+  img: ({ alt = "", ...props }: ComponentPropsWithoutRef<"img">) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      className="mb-6 h-auto w-full border border-white/[0.12]"
+      {...props}
+    />
+  ),
+
+  table: (props: ComponentPropsWithoutRef<"table">) => (
+    <div className="mb-6 overflow-x-auto">
+      <table className="w-full border-collapse text-sm" {...props} />
+    </div>
+  ),
+  th: (props: ComponentPropsWithoutRef<"th">) => (
+    <th
+      className="border-b border-white/25 px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground"
+      {...props}
+    />
+  ),
+  td: (props: ComponentPropsWithoutRef<"td">) => (
+    <td
+      className="border-b border-white/[0.08] px-3 py-2 align-top text-foreground/82"
+      {...props}
+    />
+  ),
 };

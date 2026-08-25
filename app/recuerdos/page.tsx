@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getRecuerdos } from "@/lib/content";
 import { PostCard } from "@/components/recuerdos/post-card";
+import { EstadoVacio } from "@/components/site/estado-vacio";
 import { PageHeader, PageShell } from "@/components/site/page-shell";
 
 export const metadata: Metadata = {
@@ -22,7 +23,10 @@ export default function RecuerdosPage() {
       />
 
       {posts.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Aún no hay posts.</p>
+        <EstadoVacio
+          titulo="El archivo está en silencio."
+          detalle="Las notas se publican desde el área privada."
+        />
       ) : (
         <div className="divide-y divide-white/[0.07]">
           {posts.map((r) => (
