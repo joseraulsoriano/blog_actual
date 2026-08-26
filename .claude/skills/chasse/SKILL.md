@@ -16,12 +16,13 @@ Skill de identidad personal de **José Raúl Soriano Cazabal** ("Chasse"). Úsal
 
 ## Fuente de verdad
 
-Si el repo donde estás trabajando tiene estos archivos, son más recientes que lo embebido aquí — léelos primero y prioriza su contenido sobre el resumen de abajo:
+Lee en este orden; lo de más arriba gana sobre lo de más abajo:
 
-- `content/paginas/bio.mdx` y `content/proyectos/*.mdx` (repo `blog_actual`)
-- `public/cv.pdf`, `lib/projects/data/*.ts`, `app/more-me/` (repo `portafolio`)
-
-Lo que sigue es el resumen estable para cuando ninguno de esos existe (otro repo, otro agente, otra máquina).
+1. `PERFIL.md`, junto a este archivo — bitácora de lo aprendido después de escribir este resumen, con fecha y evidencia. Es lo más reciente que existe.
+2. Contenido del repo donde estás trabajando, si lo tiene:
+   - `content/paginas/bio.mdx` y `content/proyectos/*.mdx` (repo `blog_actual`)
+   - `public/cv.pdf`, `lib/projects/data/*.ts`, `app/more-me/` (repo `portafolio`)
+3. El resumen estable de abajo, para cuando nada de lo anterior existe (otro repo, otro agente, otra máquina).
 
 ## Identidad
 
@@ -70,6 +71,56 @@ Lo que sigue es el resumen estable para cuando ninguno de esos existe (otro repo
 3. **Responder como él**: en discusiones técnicas, favorece decisiones directas, cloud/infra-first, entrega rápida bajo deadline, honestidad explícita sobre qué es prototipo vs producción.
 4. Si falta un dato (p. ej. un proyecto nuevo sin documentar), pregunta antes de inventar — esta skill nunca debe fabricar logros.
 
+## Instalación
+
+La fuente de verdad vive en `~/.claude/skills/chasse/`. En cada proyecto se instala una **copia física** (no symlink) en los tres directorios que leen los distintos agentes: `.claude/skills/`, `.cursor/skills/` y `.agents/skills/`.
+
+```bash
+~/.claude/skills/chasse/bin/instalar.sh              # proyecto actual
+~/.claude/skills/chasse/bin/instalar.sh /ruta/repo   # otro proyecto
+```
+
+El instalador copia `SKILL.md` y `PERFIL.md`, y apunta el proyecto en `proyectos.txt` para poder re-propagar cambios después:
+
+```bash
+~/.claude/skills/chasse/bin/propagar.sh   # re-copia lo global a todos los registrados
+```
+
+Instálala en cada proyecto nuevo apenas se cree: es lo que hace que el agente de ese repo sepa quién es José desde el primer prompt, y lo que conecta ese repo al ciclo de abajo.
+
+**Nunca edites una copia suelta dentro de un proyecto** — la siguiente propagación la sobrescribe. Todo cambio va al archivo global y luego se propaga.
+
+## Al entrar a un proyecto nuevo (jalar datos)
+
+La primera vez que uses esta skill en un repo, haz un inventario corto y quédate con lo que sea nuevo respecto a Identidad / Perfil técnico / `PERFIL.md`:
+
+1. Qué es el proyecto y para qué existe: `README`, `docs/`, descripción del `package.json` / `pyproject.toml` / `Package.swift`.
+2. El stack **real**, no el declarado: dependencias, IaC, CI, infra que de verdad está en el repo.
+3. Su participación: `git log --author` (nombre o `am.maldonado.morales04@gmail.com`), primer y último commit, qué partes tocó.
+4. Contenido del repo que hable de él: bio, CV, data de proyectos, posts.
+
+Lo que aparezca ahí y no esté en el perfil es candidato a entrar por el ciclo de retroalimentación. Lo que ya esté, no se duplica.
+
+## Retroalimentación (cómo se actualiza el perfil)
+
+El perfil se alimenta del trabajo real, pero **nunca inventa**. Reglas:
+
+- Un hecho entra solo si tiene evidencia verificable — ruta de archivo, commit, URL — o si José lo confirmó explícitamente en la conversación. Sin evidencia no entra, aunque parezca obvio.
+- Para anotarlo, usa el script: escribe en el `PERFIL.md` global con fecha absoluta y re-propaga a todos los proyectos registrados.
+
+  ```bash
+  ~/.claude/skills/chasse/bin/aprender.sh "hecho" "evidencia"
+  ```
+
+- Si el hecho cambia la identidad estable (rol nuevo, empresa, certificación terminada, cambio de stack principal), además actualiza la sección que le toque de **este** archivo y propaga.
+- Nada volátil: si no va a seguir siendo verdad en seis meses (que un repo esté a medias, una preferencia de una sola sesión), no es perfil.
+- Contradicciones: no borres el hecho viejo, márcalo `(superado AAAA-MM-DD)` y anota el nuevo. El perfil es historial, no estado — eso es justo lo que permite reconstruir su trayectoria después.
+- Al terminar un trabajo grande en un repo (feature shippeada, proyecto nuevo, certificación), pregúntate si salió algo que el perfil no sabía. Normalmente sí: el stack que tocó, el tipo de problema que resuelve, cómo decide bajo deadline.
+
 ## Mantenimiento
 
-Cuando José confirme un hecho nuevo (rol, proyecto, preferencia) que no esté aquí, actualiza este archivo — es la fuente que viaja con él entre repos y agentes.
+- Identidad estable → este archivo, en su sección.
+- Hechos nuevos con fecha → `PERFIL.md`, vía `bin/aprender.sh`.
+- Después de cualquier cambio, `bin/propagar.sh` para que los repos no queden desactualizados.
+
+Esta es la fuente que viaja con él entre repos y agentes: si vive solo en tu contexto, se pierde al cerrar la sesión.
