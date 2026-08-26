@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { cn } from "@/lib/utils";
 
 export function PageShell({
@@ -59,12 +61,12 @@ export function PageHeader({
 export function BackLink({ href, label }: { href: string; label: string }) {
   return (
     <p className="mt-12">
-      <a
+      <Link
         href={href}
         className="text-sm text-muted-foreground transition-colors hover:text-foreground"
       >
         ← {label}
-      </a>
+      </Link>
     </p>
   );
 }

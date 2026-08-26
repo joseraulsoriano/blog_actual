@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getEntry, getProyectos, type ProyectoMeta } from "@/lib/content";
+import {
+  esBorrador,
+  getEntry,
+  getProyectos,
+  type ProyectoMeta,
+} from "@/lib/content";
 import { Prosa } from "@/components/retro/prosa";
 import { PageShell } from "@/components/site/page-shell";
 
@@ -26,7 +31,7 @@ export default async function ProyectoPage({
 }) {
   const { slug } = await params;
   const p = getEntry<ProyectoMeta>("proyectos", slug);
-  if (!p) notFound();
+  if (!p || esBorrador(p.data)) notFound();
 
   return (
     <PageShell>

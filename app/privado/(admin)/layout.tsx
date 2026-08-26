@@ -26,6 +26,10 @@ export default async function AdminLayout({
         </p>
         <div className="flex items-center gap-2">
           <Button
+            size="sm"
+            render={<Link href="/privado/publicar">Publicar</Link>}
+          />
+          <Button
             variant="ghost"
             size="sm"
             render={<Link href="/privado">Panel</Link>}

@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 const puertas = [
   { href: "/bio", palabra: "Orígenes" },
   { href: "/proyectos", palabra: "Piezas" },
+  { href: "/opiniones", palabra: "Opiniones" },
+  { href: "/recursos", palabra: "Recursos" },
   { href: "/eventos", palabra: "Noches" },
   { href: "/viajes", palabra: "Ciudades" },
   { href: "/recuerdos", palabra: "Recuerdos" },

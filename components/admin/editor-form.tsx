@@ -1,11 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Campo, EsquemaColeccion } from "@/lib/admin/schemas";
 import { CampoFotos, type Foto } from "@/components/admin/campo-fotos";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+/** Título → slug legible: sin acentos, minúsculas y guiones. */
+function slugificar(valor: string): string {
+  return valor
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+/, "")
+    .slice(0, 80);
+}
 
 type Etapa = { año: number | string; hasta?: number | string; texto: string; href?: string };
 
@@ -75,11 +87,14 @@ function CampoInput({
   valor,
   coleccion,
   slug,
+  alEscribir,
 }: {
   campo: Campo;
   valor: unknown;
   coleccion: string;
   slug: string;
+  /** Solo en el campo del que se deriva el slug. */
+  alEscribir?: (v: string) => void;
 }) {
   const name = `fm_${campo.name}`;
   const v = valor == null ? "" : String(valor);
@@ -176,6 +191,9 @@ function CampoInput({
           name={name}
           defaultValue={v}
           required={campo.requerido}
+          onChange={
+            alEscribir ? (e) => alEscribir(e.target.value) : undefined
+          }
         />
       );
   }
@@ -199,10 +217,30 @@ export function EditorForm({
   accionEliminar?: (formData: FormData) => Promise<void>;
 }) {
   const [slugActual, setSlugActual] = useState(slug);
+  const [slugManual, setSlugManual] = useState(false);
+  // Ref y no estado: el valor debe estar puesto antes de que salga el submit.
+  const estadoRef = useRef<HTMLInputElement>(null);
+
+  const eraBorrador = valores.borrador === true;
+
+  function alEscribirTitulo(v: string) {
+    if (!esNuevo || slugManual) return;
+    setSlugActual(slugificar(v));
+  }
+
+  function marcarEstado(estado: "publicado" | "borrador") {
+    if (estadoRef.current) estadoRef.current.value = estado;
+  }
 
   return (
     <form action={accion} className="space-y-5">
       <input type="hidden" name="coleccion" value={esquema.coleccion} />
+      <input
+        ref={estadoRef}
+        type="hidden"
+        name="estado"
+        defaultValue={eraBorrador ? "borrador" : "publicado"}
+      />
       {esNuevo ? (
         <div className="space-y-1.5">
           <Label htmlFor="slug" className="text-muted-foreground">
@@ -216,7 +254,10 @@ export function EditorForm({
               id="slug"
               name="slug"
               value={slugActual}
-              onChange={(e) => setSlugActual(e.target.value)}
+              onChange={(e) => {
+                setSlugManual(true);
+                setSlugActual(e.target.value);
+              }}
               pattern="[a-z0-9][a-z0-9-]*"
               required
               className="w-56 font-mono"
@@ -239,6 +280,9 @@ export function EditorForm({
             valor={valores[campo.name]}
             coleccion={esquema.coleccion}
             slug={slugActual}
+            alEscribir={
+              campo.name === esquema.campoTitulo ? alEscribirTitulo : undefined
+            }
           />
           {campo.ayuda ? (
             <p className="text-xs text-muted-foreground"># {campo.ayuda}</p>
@@ -259,10 +303,31 @@ export function EditorForm({
         />
       </div>
 
-      <div className="flex items-center gap-3">
-        <Button type="submit">
-          {esNuevo ? "crear entrada" : "guardar cambios"}
+      {eraBorrador ? (
+        <p className="text-xs text-muted-foreground">
+          # Ahora mismo es un borrador: no aparece en el sitio.
+        </p>
+      ) : null}
+
+      <div className="flex flex-wrap items-center gap-3">
+        <Button type="submit" onClick={() => marcarEstado("publicado")}>
+          {esquema.borradores
+            ? esNuevo || eraBorrador
+              ? "Publicar"
+              : "Guardar cambios"
+            : esNuevo
+              ? "crear entrada"
+              : "guardar cambios"}
         </Button>
+        {esquema.borradores ? (
+          <Button
+            type="submit"
+            variant="outline"
+            onClick={() => marcarEstado("borrador")}
+          >
+            Guardar borrador
+          </Button>
+        ) : null}
         {!esNuevo && accionEliminar ? (
           <Button
             type="submit"

@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getEntry, getRecuerdos, type RecuerdoMeta } from "@/lib/content";
+import {
+  esBorrador,
+  getEntry,
+  getRecuerdos,
+  type RecuerdoMeta,
+} from "@/lib/content";
 import { etiquetaRecuerdo, textoRecuerdo } from "@/lib/recuerdos";
 import { metaPagina } from "@/lib/seo";
 import { PostCard } from "@/components/recuerdos/post-card";
@@ -39,7 +44,7 @@ export default async function RecuerdoPage({
 }) {
   const { slug } = await params;
   const r = getEntry<RecuerdoMeta>("recuerdos", slug);
-  if (!r) notFound();
+  if (!r || esBorrador(r.data)) notFound();
 
   return (
     <PageShell className="max-w-2xl">

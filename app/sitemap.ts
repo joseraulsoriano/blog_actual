@@ -2,8 +2,10 @@ import type { MetadataRoute } from "next";
 import {
   getEscritos,
   getEventos,
+  getOpiniones,
   getProyectos,
   getRecuerdos,
+  getRecursos,
   getViajes,
 } from "@/lib/content";
 import { fechaRecuerdoISO } from "@/lib/recuerdos";
@@ -16,6 +18,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: urlAbsoluta("/"), lastModified: ahora, priority: 1 },
     { url: urlAbsoluta("/escritos"), lastModified: ahora, priority: 0.9 },
     { url: urlAbsoluta("/proyectos"), lastModified: ahora, priority: 0.8 },
+    { url: urlAbsoluta("/opiniones"), lastModified: ahora, priority: 0.8 },
+    { url: urlAbsoluta("/recursos"), lastModified: ahora, priority: 0.7 },
     { url: urlAbsoluta("/bio"), lastModified: ahora, priority: 0.7 },
     { url: urlAbsoluta("/recuerdos"), lastModified: ahora, priority: 0.6 },
     { url: urlAbsoluta("/eventos"), lastModified: ahora, priority: 0.6 },
@@ -27,6 +31,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: urlAbsoluta(`/escritos/${e.slug}`),
     lastModified: new Date(`${e.data.fecha}T12:00:00`),
     priority: 0.9,
+  }));
+
+  const opiniones = getOpiniones().map((o) => ({
+    url: urlAbsoluta(`/opiniones/${o.slug}`),
+    lastModified: new Date(`${o.data.fecha}T12:00:00`),
+    priority: 0.8,
+  }));
+
+  const recursos = getRecursos().map((r) => ({
+    url: urlAbsoluta(`/recursos/${r.slug}`),
+    lastModified: new Date(`${r.data.fecha}T12:00:00`),
+    priority: 0.6,
   }));
 
   const proyectos = getProyectos().map((p) => ({
@@ -54,7 +70,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.3,
   }));
 
-  return [...fijas, ...escritos, ...proyectos, ...eventos, ...recuerdos, ...viajes].map(
+  return [
+    ...fijas,
+    ...escritos,
+    ...opiniones,
+    ...recursos,
+    ...proyectos,
+    ...eventos,
+    ...recuerdos,
+    ...viajes,
+  ].map(
     (e) => ({
       ...e,
       lastModified:

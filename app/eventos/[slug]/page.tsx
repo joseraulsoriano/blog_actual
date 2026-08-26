@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getEntry, getEventos, type EventoMeta } from "@/lib/content";
+import {
+  esBorrador,
+  getEntry,
+  getEventos,
+  type EventoMeta,
+} from "@/lib/content";
 import { Prosa } from "@/components/retro/prosa";
 import { MediaGallery } from "@/components/site/media-gallery";
 import { PageShell } from "@/components/site/page-shell";
@@ -27,7 +32,7 @@ export default async function EventoPage({
 }) {
   const { slug } = await params;
   const e = getEntry<EventoMeta>("eventos", slug);
-  if (!e) notFound();
+  if (!e || esBorrador(e.data)) notFound();
 
   return (
     <PageShell>

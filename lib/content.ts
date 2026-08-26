@@ -68,6 +68,19 @@ export function getEntry<T>(dir: string, slug: string): Entry<T> | null {
 }
 
 /**
+ * Una entrada con `borrador: true` vive en el repo pero no en el sitio:
+ * no sale en listas, feed, sitemap ni en su propia URL.
+ */
+export function esBorrador(data: unknown): boolean {
+  return (data as { borrador?: boolean } | null)?.borrador === true;
+}
+
+/** Colección sin borradores: lo que el público puede ver. */
+export function getPublicados<T>(dir: string): Entry<T>[] {
+  return getCollection<T>(dir).filter((e) => !esBorrador(e.data));
+}
+
+/**
  * Post corto tipo timeline (publicado desde /privado).
  * El texto vive en el body del MDX; frontmatter mínimo.
  */
@@ -85,7 +98,7 @@ export type RecuerdoMeta = {
 };
 
 export function getRecuerdos() {
-  return getCollection<RecuerdoMeta>("recuerdos").sort((a, b) =>
+  return getPublicados<RecuerdoMeta>("recuerdos").sort((a, b) =>
     b.data.fecha.localeCompare(a.data.fecha)
   );
 }
@@ -112,7 +125,7 @@ export type ViajeMeta = {
 };
 
 export function getViajes() {
-  return getCollection<ViajeMeta>("viajes").sort(
+  return getPublicados<ViajeMeta>("viajes").sort(
     (a, b) => a.data.año - b.data.año
   );
 }
@@ -128,7 +141,7 @@ export type EscritoMeta = {
 };
 
 export function getEscritos() {
-  return getCollection<EscritoMeta>("escritos").sort((a, b) =>
+  return getPublicados<EscritoMeta>("escritos").sort((a, b) =>
     b.data.fecha.localeCompare(a.data.fecha)
   );
 }
@@ -140,13 +153,60 @@ export function minutosLectura(texto: string): number {
 }
 
 export function getProyectos() {
-  return getCollection<ProyectoMeta>("proyectos").sort(
+  return getPublicados<ProyectoMeta>("proyectos").sort(
     (a, b) => b.data.año - a.data.año
   );
 }
 
 export function getEventos() {
-  return getCollection<EventoMeta>("eventos").sort(
+  return getPublicados<EventoMeta>("eventos").sort(
     (a, b) => b.data.año - a.data.año
+  );
+}
+
+/** Recurso recomendado: libro, curso, herramienta, repo, video… */
+export type RecursoTipo =
+  | "libro"
+  | "curso"
+  | "herramienta"
+  | "articulo"
+  | "video"
+  | "podcast"
+  | "repo";
+
+export type RecursoMeta = {
+  title: string;
+  resumen: string;
+  tipo: RecursoTipo;
+  /** URL externa al recurso. */
+  enlace?: string;
+  autor?: string;
+  /** ISO `yyyy-mm-dd` — cuándo lo recomendé. */
+  fecha: string;
+  tags?: string[];
+  borrador?: boolean;
+};
+
+export function getRecursos() {
+  return getPublicados<RecursoMeta>("recursos").sort((a, b) =>
+    b.data.fecha.localeCompare(a.data.fecha)
+  );
+}
+
+/** Opinión: una postura firmada, con fecha, para poder releerla después. */
+export type OpinionMeta = {
+  title: string;
+  /** La tesis en una frase. */
+  resumen: string;
+  /** ISO `yyyy-mm-dd`. */
+  fecha: string;
+  tema?: "tecnologia" | "industria" | "educacion" | "cultura" | "personal";
+  tags?: string[];
+  borrador?: boolean;
+};
+
+export function getOpiniones() {
+  return getPublicados<OpinionMeta>("opiniones").sort((a, b) =>
+    b.data.fecha.localeCompare(a.data.fecha)
   );
 }

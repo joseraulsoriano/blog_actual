@@ -6,7 +6,9 @@ import {
   BookOpen,
   FolderKanban,
   Home,
+  Library,
   MapPinned,
+  MessageSquareQuote,
   PenLine,
   Ticket,
   UserRound,
@@ -16,6 +18,8 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "/", label: "Inicio", icon: Home },
   { href: "/escritos", label: "Escritos", icon: PenLine },
+  { href: "/opiniones", label: "Opiniones", icon: MessageSquareQuote },
+  { href: "/recursos", label: "Recursos", icon: Library },
   { href: "/bio", label: "Expediente", icon: UserRound },
   { href: "/proyectos", label: "Proyectos", icon: FolderKanban },
   { href: "/eventos", label: "Eventos", icon: Ticket },
@@ -27,7 +31,7 @@ function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
-/** Dock en las 6 vistas; el detalle ([slug]) hereda el activo de su sección. */
+/** Dock de las secciones; el detalle ([slug]) hereda el activo de su sección. */
 export function SiteNav() {
   const pathname = usePathname();
   if (pathname.startsWith("/privado")) return null;
@@ -45,12 +49,12 @@ export function SiteNav() {
           "md:rounded-full md:border md:border-white/15 md:bg-black/85 md:px-2 md:shadow-[0_0_24px_oklch(0_0_0_/_0.6)]"
         )}
       >
-        <ul className="mx-auto flex max-w-lg items-stretch justify-between gap-0 px-1 md:gap-1 md:px-2">
+        <ul className="mx-auto flex max-w-xl items-stretch justify-between gap-0 px-1 md:gap-1 md:px-2">
           {links.map(({ href, label, icon: Icon }) => {
             const active = isActive(pathname, href);
             const isHome = href === "/";
             return (
-              <li key={href} className="flex-1 md:flex-none">
+              <li key={href} className="min-w-0 flex-1 md:flex-none">
                 <Link
                   href={href}
                   aria-label={label}
@@ -73,7 +77,9 @@ export function SiteNav() {
                     )}
                     aria-hidden
                   />
-                  <span className="md:sr-only">{label}</span>
+                  <span className="w-full truncate text-center md:sr-only">
+                    {label}
+                  </span>
                 </Link>
               </li>
             );

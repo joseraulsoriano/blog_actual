@@ -12,6 +12,18 @@ import {
 } from "@/lib/admin/schemas";
 import { getEntry } from "@/lib/content";
 
+/** Título → slug: sin acentos, minúsculas y guiones. */
+function normalizarSlug(valor: string): string {
+  return valor
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}
+
 function construirData(coleccion: string, formData: FormData) {
   const esquema = ESQUEMAS[coleccion];
   const data: Record<string, unknown> = {};
@@ -75,6 +87,12 @@ function construirData(coleccion: string, formData: FormData) {
   return data;
 }
 
+/** "borrador" guarda sin publicar; cualquier otra cosa publica. */
+function esBorradorPedido(coleccion: string, formData: FormData): boolean {
+  if (!ESQUEMAS[coleccion]?.borradores) return false;
+  return String(formData.get("estado") ?? "") === "borrador";
+}
+
 async function persistir(
   coleccion: string,
   slug: string,
@@ -82,6 +100,7 @@ async function persistir(
   mensaje: string
 ) {
   const data = construirData(coleccion, formData);
+  if (esBorradorPedido(coleccion, formData)) data.borrador = true;
   const body = String(formData.get("body") ?? "").replace(/\r\n/g, "\n");
   // gray-matter serializa el YAML con las comillas necesarias
   // (adiós al bug de los dos puntos en los títulos).
@@ -98,16 +117,23 @@ export async function guardarEntrada(formData: FormData) {
     throw new Error("Colección o slug inválidos");
   }
   await persistir(coleccion, slug, formData, `contenido: actualiza ${coleccion}/${slug}`);
-  redirect(`/privado?ok=${coleccion}/${slug}`);
+  redirect(
+    `/privado?ok=${coleccion}/${slug}${
+      esBorradorPedido(coleccion, formData) ? "&estado=borrador" : ""
+    }`
+  );
 }
 
 export async function crearEntrada(formData: FormData) {
   await exigirAdmin();
   const coleccion = String(formData.get("coleccion") ?? "");
-  let slug = String(formData.get("slug") ?? "")
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-");
+  let slug = normalizarSlug(String(formData.get("slug") ?? ""));
+
+  // Si el formulario no trajo slug, se deriva del campo título del esquema.
+  if (!slug && esColeccionValida(coleccion)) {
+    const campo = ESQUEMAS[coleccion].campoTitulo;
+    if (campo) slug = normalizarSlug(String(formData.get(`fm_${campo}`) ?? ""));
+  }
 
   // Posts: si el slug choca, añade un sufijo
   if (coleccion === "recuerdos" && slug && getEntry(coleccion, slug)) {
@@ -121,7 +147,11 @@ export async function crearEntrada(formData: FormData) {
     throw new Error(`Ya existe ${coleccion}/${slug}`);
   }
   await persistir(coleccion, slug, formData, `contenido: crea ${coleccion}/${slug}`);
-  redirect(`/privado?ok=${coleccion}/${slug}`);
+  redirect(
+    `/privado?ok=${coleccion}/${slug}${
+      esBorradorPedido(coleccion, formData) ? "&estado=borrador" : ""
+    }`
+  );
 }
 
 export async function eliminarEntrada(formData: FormData) {

@@ -1,4 +1,9 @@
-import { getEscritos, getRecuerdos } from "@/lib/content";
+import {
+  getEscritos,
+  getOpiniones,
+  getRecuerdos,
+  getRecursos,
+} from "@/lib/content";
 import { fechaRecuerdoISO, etiquetaRecuerdo, textoRecuerdo } from "@/lib/recuerdos";
 import { urlAbsoluta } from "@/lib/seo";
 
@@ -28,6 +33,18 @@ export function GET() {
       titulo: e.data.title,
       descripcion: e.data.resumen,
       fecha: new Date(`${e.data.fecha}T12:00:00`),
+    })),
+    ...getOpiniones().map((o) => ({
+      url: urlAbsoluta(`/opiniones/${o.slug}`),
+      titulo: o.data.title,
+      descripcion: o.data.resumen,
+      fecha: new Date(`${o.data.fecha}T12:00:00`),
+    })),
+    ...getRecursos().map((r) => ({
+      url: urlAbsoluta(`/recursos/${r.slug}`),
+      titulo: r.data.title,
+      descripcion: r.data.resumen,
+      fecha: new Date(`${r.data.fecha}T12:00:00`),
     })),
     ...getRecuerdos().map((r) => ({
       url: urlAbsoluta(`/recuerdos/${r.slug}`),
