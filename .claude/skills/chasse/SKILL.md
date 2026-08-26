@@ -96,7 +96,7 @@ La primera vez que uses esta skill en un repo, haz un inventario corto y quédat
 
 1. Qué es el proyecto y para qué existe: `README`, `docs/`, descripción del `package.json` / `pyproject.toml` / `Package.swift`.
 2. El stack **real**, no el declarado: dependencias, IaC, CI, infra que de verdad está en el repo.
-3. Su participación: `git log --author` (nombre o `am.maldonado.morales04@gmail.com`), primer y último commit, qué partes tocó.
+3. Su participación: `git log --author` — usa `joseraulsoriano`, `sc202357155@alm.buap.mx` o `raulcazabal@icloud.com`; mira primer y último commit y qué partes tocó.
 4. Contenido del repo que hable de él: bio, CV, data de proyectos, posts.
 
 Lo que aparezca ahí y no esté en el perfil es candidato a entrar por el ciclo de retroalimentación. Lo que ya esté, no se duplica.
