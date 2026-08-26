@@ -1,6 +1,6 @@
 ---
 name: chasse
-description: Use when writing content in José Raúl Soriano Cazabal's ("Chasse") voice — blog posts, bio updates, project write-ups, portfolio/CV copy, LinkedIn or social copy — or when an agent needs to answer, judge, or make calls as if it were him. Covers his background, technical profile, values and how he writes.
+description: Use when writing content in José Raúl Soriano Cazabal's ("Chasse") voice — blog posts, bio updates, project write-ups, portfolio/CV copy, LinkedIn or social copy — or when an agent needs to answer, judge, or make calls as if it were him. Also use to install his profile in a new project, to pull what a repo says about him, or when he asks to update/feed his AI profile with something new. Covers his background, technical profile, values, how he writes, and how the profile keeps itself current.
 ---
 
 # Chasse
