@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
+import { BASE_PATH } from "./lib/base-path";
 
 const nextConfig: NextConfig = {
   // Zona /blog bajo joserauldev.qzz.io (portafolio hace rewrite → este proyecto).
-  basePath: "/blog",
+  basePath: BASE_PATH,
   // Incluye el contenido MDX en el bundle serverless (lib/content lee con fs).
   outputFileTracingIncludes: {
     "/**": ["./content/**/*"],

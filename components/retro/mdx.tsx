@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import type { ComponentPropsWithoutRef } from "react";
 import Link from "next/link";
+import { withBasePath } from "@/lib/base-path";
 
 /** Tipografía editorial para MDX — sin prefijos de terminal. */
 export const mdxComponents: MDXComponents = {
@@ -64,10 +65,12 @@ export const mdxComponents: MDXComponents = {
   ),
 
   // Imágenes de MDX: sin dimensiones conocidas, next/image no aplica.
-  img: ({ alt = "", ...props }: ComponentPropsWithoutRef<"img">) => (
+  // `<img>` no hereda el basePath /blog como sí lo hace next/link.
+  img: ({ alt = "", src, ...props }: ComponentPropsWithoutRef<"img">) => (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       alt={alt}
+      src={typeof src === "string" ? withBasePath(src) : src}
       loading="lazy"
       decoding="async"
       className="mb-6 h-auto w-full border border-white/[0.12]"
