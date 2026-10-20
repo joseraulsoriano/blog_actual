@@ -7,7 +7,7 @@ export function blogPublicBase(req: Request): string {
   const host =
     req.headers.get("x-forwarded-host") ??
     req.headers.get("host") ??
-    "joserauldev.qzz.io";
+    "joseraulsoriano.com";
   return `${proto}://${host}/blog`;
 }
 

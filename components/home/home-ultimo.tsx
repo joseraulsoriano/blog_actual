@@ -30,7 +30,7 @@ function inicial(nombre: string): string {
 /**
  * Lo último = PC con chat general vivo.
  * Envía por fetch a /api/chat (no Server Action): en multi-zone bajo
- * joserauldev.qzz.io/blog los Server Actions los come el portafolio.
+ * joseraulsoriano.com/blog los Server Actions los come el portafolio.
  */
 export function HomeUltimo({ mensajes: iniciales }: { mensajes: ChatMensaje[] }) {
   const ref = useRef<HTMLElement>(null);

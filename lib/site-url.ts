@@ -1,6 +1,6 @@
 /**
  * URL pública del blog (incluye basePath /blog).
- * En producción detrás del portafolio: https://joserauldev.qzz.io/blog
+ * En producción detrás del portafolio: https://joseraulsoriano.com/blog
  */
 export function getSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();

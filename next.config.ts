@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 import { BASE_PATH } from "./lib/base-path";
 
 const nextConfig: NextConfig = {
-  // Zona /blog bajo joserauldev.qzz.io (portafolio hace rewrite → este proyecto).
+  // Zona /blog bajo joseraulsoriano.com (portafolio hace rewrite → este proyecto).
   basePath: BASE_PATH,
   // Incluye el contenido MDX en el bundle serverless (lib/content lee con fs).
   outputFileTracingIncludes: {
@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       allowedOrigins: [
+        "joseraulsoriano.com",
+        "www.joseraulsoriano.com",
+        // Dominio anterior: redirige al nuevo, pero un formulario abierto antes del cambio aún puede enviar.
         "joserauldev.qzz.io",
         "blog-actual.vercel.app",
         "localhost:3000",
