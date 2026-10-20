@@ -38,7 +38,7 @@ export default async function UmbralPage() {
             size="sm"
             render={<Link href="/">Sitio</Link>}
           />
-          <form action="/blog/api/privado/salir" method="post">
+          <form action="/api/privado/salir" method="post">
             <Button variant="outline" size="sm" type="submit">
               Salir
             </Button>

@@ -1,4 +1,4 @@
-/** Origen público del blog (con /blog). */
+/** Origen público del blog. */
 export function blogPublicBase(req: Request): string {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
   if (fromEnv) return fromEnv;
@@ -7,11 +7,11 @@ export function blogPublicBase(req: Request): string {
   const host =
     req.headers.get("x-forwarded-host") ??
     req.headers.get("host") ??
-    "joseraulsoriano.com";
-  return `${proto}://${host}/blog`;
+    "blog.joseraulsoriano.com";
+  return `${proto}://${host}`;
 }
 
-/** Redirect 303 a una ruta del blog (path sin /blog, p.ej. `/privado`). */
+/** Redirect 303 a una ruta del blog (p. ej. `/privado`). */
 export function redirectBlog(req: Request, path: string): Response {
   const base = blogPublicBase(req);
   const suffix = path.startsWith("/") ? path : `/${path}`;

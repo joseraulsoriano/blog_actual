@@ -30,7 +30,7 @@ export function CampoFotos({
       fd.set("coleccion", coleccion);
       fd.set("slug", slug || "general");
       // basePath /blog no aplica a fetch(): la ruta lo lleva explícito.
-      const res = await fetch("/blog/api/admin/upload", { method: "POST", body: fd });
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
       if (!res.ok) throw new Error(await res.text());
       const { src } = (await res.json()) as { src: string };
       setFotos((f) => [...f, { src, alt: file.name.replace(/\.[^.]+$/, "") }]);

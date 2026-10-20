@@ -35,7 +35,7 @@ export default async function AdminLayout({
             size="sm"
             render={<Link href="/">Ver sitio</Link>}
           />
-          <form action="/blog/api/privado/salir" method="post">
+          <form action="/api/privado/salir" method="post">
             <Button variant="outline" size="sm" type="submit">
               Salir
             </Button>

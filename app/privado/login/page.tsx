@@ -15,8 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 // Forms usan API routes (no Server Actions) para funcionar bajo el proxy /blog.
-const LOGIN_ACTION = "/blog/api/privado/login";
-const PALABRA_ACTION = "/blog/api/privado/palabra";
+const LOGIN_ACTION = "/api/privado/login";
+const PALABRA_ACTION = "/api/privado/palabra";
 
 export const metadata: Metadata = {
   title: "Acceso privado",

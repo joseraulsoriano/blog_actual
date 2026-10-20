@@ -11,7 +11,7 @@ export function urlAbsoluta(path: string): string {
 /**
  * Metadata de página con canónica explícita.
  * `metadataBase` por sí solo NO emite <link rel="canonical">: sin esto,
- * blog-actual.vercel.app y joseraulsoriano.com/blog compiten por el mismo
+ * blog-actual.vercel.app y blog.joseraulsoriano.com compiten por el mismo
  * contenido en el índice de Google.
  */
 export function metaPagina({

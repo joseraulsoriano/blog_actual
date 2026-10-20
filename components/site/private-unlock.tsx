@@ -35,7 +35,7 @@ export function PrivateUnlock() {
       startTransition(async () => {
         try {
           // Route Handler (no Server Action): atraviesa el proxy /blog.
-          const res = await fetch("/blog/api/privado/unlock", {
+          const res = await fetch("/api/privado/unlock", {
             method: "POST",
             credentials: "same-origin",
           });

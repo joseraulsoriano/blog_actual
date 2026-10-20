@@ -79,7 +79,7 @@ export function tarjetaOG({
           }}
         >
           <div style={{ display: "flex" }}>José Raúl Soriano</div>
-          <div style={{ display: "flex" }}>{pie ?? "joseraulsoriano.com"}</div>
+          <div style={{ display: "flex" }}>{pie ?? "blog.joseraulsoriano.com"}</div>
         </div>
       </div>
     ),

@@ -30,7 +30,7 @@ function inicial(nombre: string): string {
 /**
  * Lo último = PC con chat general vivo.
  * Envía por fetch a /api/chat (no Server Action): en multi-zone bajo
- * joseraulsoriano.com/blog los Server Actions los come el portafolio.
+ * joseraulsoriano.com/blog los Server Actions se los comía el portafolio (antes del subdominio).
  */
 export function HomeUltimo({ mensajes: iniciales }: { mensajes: ChatMensaje[] }) {
   const ref = useRef<HTMLElement>(null);
@@ -67,7 +67,7 @@ export function HomeUltimo({ mensajes: iniciales }: { mensajes: ChatMensaje[] })
     startTransition(async () => {
       try {
         // Absolute bajo basePath /blog (fetch no lo antepone solo).
-        const res = await fetch("/blog/api/chat", {
+        const res = await fetch("/api/chat", {
           method: "POST",
           body: data,
         });
