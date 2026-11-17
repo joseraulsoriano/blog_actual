@@ -379,3 +379,17 @@
   background: oklch(1 0 0 / 6%);
   border-left-color: oklch(1 0 0 / 55%);
 }
+
+/* «Desprender» de RTC (public/rtc-desprender.js): con ?rtc-seccion=<clave> la sección va sola.
+   El script mide sólo la sección; sin esto el aire vertical de <main> y de PageShell
+   quedaría fuera de la altura que avisa y el marco cortaría el final (y los márgenes de abajo
+   dejarían un hueco con scroll). Las dos marcas (/bio, /viajes) son bloques: flow-root no las altera. */
+html[data-rtc-desprendida] main,
+html[data-rtc-desprendida] main > * {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+html[data-rtc-desprendida] [data-rtc-seccion] {
+  display: flow-root; /* el margen del último hijo cuenta dentro de la sección */
+  margin-bottom: 0 !important;
+}

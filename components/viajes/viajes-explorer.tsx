@@ -79,7 +79,7 @@ export function ViajesExplorer({
   ) : null;
 
   return (
-    <div className="space-y-4 sm:space-y-5">
+    <div className="space-y-4 sm:space-y-5" data-rtc-seccion="ubicacion">
       {/* Mismo planeta que el home, girando más lento para leer las etiquetas. */}
       <div className="flex justify-center overflow-visible py-1 sm:py-2">
         <AsciiGlobe
