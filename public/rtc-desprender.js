@@ -38,19 +38,38 @@ export function iniciarDesprender(doc = document, win = window) {
         // Sólo viaja una altura y una clave pública: no hace falta restringir el destino.
         win.parent.postMessage(m, '*');
     };
-    const correr = () => {
-        const el = doc.querySelector(`[data-rtc-seccion~="${clave}"]`);
-        if (!el) {
-            doc.documentElement.setAttribute('data-rtc-desprendida', 'no');
-            avisar(0);
-            return;
+    const selector = `[data-rtc-seccion~="${clave}"]`;
+    // Next y React mandan la página por partes: una sección puede llegar primero dentro de un
+    // `<div hidden id="S:0">` y moverse después a su lugar. Sólo cuenta la que ya está a la vista; si
+    // se tomaba la oculta, se escondía el <main> real y la altura salía 0 (el blog, KAN-105).
+    const buscar = () => (Array.from(doc.querySelectorAll(selector)).find((e) => !e.closest('[hidden], template')) ?? null);
+    // Cada estilo que se pone guarda el que había, para poder rehacerlo si la sección cambia de lugar.
+    const tocados = [];
+    const poner = (n, p, v) => {
+        tocados.push([n, p, n.style.getPropertyValue(p), n.style.getPropertyPriority(p)]);
+        n.style.setProperty(p, v, 'important');
+    };
+    const deshacer = () => {
+        for (const [n, p, v, prioridad] of tocados.splice(0).reverse()) {
+            if (v)
+                n.style.setProperty(p, v, prioridad);
+            else
+                n.style.removeProperty(p);
         }
+    };
+    let actual = null;
+    const medir = () => { if (actual)
+        avisar(Math.ceil(actual.getBoundingClientRect().bottom + win.scrollY)); };
+    const ro = 'ResizeObserver' in win ? new ResizeObserver(medir) : null;
+    const aplicar = (el) => {
+        deshacer();
+        actual = el;
         // Se ocultan los hermanos de la sección y de cada uno de sus contenedores: la sección conserva
         // su CSS (el de su sitio) y nada más ocupa lugar. Scripts y estilos se dejan en paz.
         for (let n = el; n && n !== doc.body && n.parentElement; n = n.parentElement) {
             for (const h of Array.from(n.parentElement.children)) {
                 if (h !== n && !/^(SCRIPT|STYLE|LINK|TEMPLATE)$/.test(h.tagName))
-                    h.style.setProperty('display', 'none', 'important');
+                    poner(h, 'display', 'none');
             }
         }
         doc.documentElement.setAttribute('data-rtc-desprendida', clave);
@@ -58,23 +77,52 @@ export function iniciarDesprender(doc = document, win = window) {
         // si no, la sección no queda pegada arriba y la altura avisada se queda corta (en el blog, 80 px).
         for (let n = el.parentElement; n && n !== doc.documentElement; n = n.parentElement) {
             for (const p of ['padding-top', 'padding-bottom', 'margin-top', 'margin-bottom'])
-                n.style.setProperty(p, '0', 'important');
-            n.style.setProperty('min-height', '0', 'important');
+                poner(n, p, '0');
+            poner(n, 'min-height', '0');
         }
-        el.style.setProperty('margin-top', '0', 'important');
-        el.style.setProperty('margin-bottom', '0', 'important');
+        poner(el, 'margin-top', '0');
+        poner(el, 'margin-bottom', '0');
         win.scrollTo(0, 0);
-        // Hasta el borde inferior de la sección, contado desde el inicio del documento.
-        const medir = () => avisar(Math.ceil(el.getBoundingClientRect().bottom + win.scrollY));
+        ro?.disconnect();
+        ro?.observe(el);
         medir();
-        if ('ResizeObserver' in win)
-            new ResizeObserver(medir).observe(el);
-        win.addEventListener('load', medir);
+    };
+    const correr = () => {
+        const el = buscar();
+        if (el && el !== actual)
+            aplicar(el);
+    };
+    // Mientras la página termina de llegar se vuelve a buscar en cada cambio del documento.
+    let pendiente = false;
+    const mo = 'MutationObserver' in win
+        ? new MutationObserver(() => {
+            if (pendiente)
+                return;
+            pendiente = true;
+            win.requestAnimationFrame(() => { pendiente = false; correr(); });
+        })
+        : null;
+    const cerrar = () => {
+        mo?.disconnect();
+        correr();
+        medir();
+        if (!actual) {
+            doc.documentElement.setAttribute('data-rtc-desprendida', 'no');
+            avisar(0);
+        }
+    };
+    const empezar = () => {
+        correr();
+        mo?.observe(doc.documentElement, { childList: true, subtree: true });
+        if (doc.readyState === 'complete')
+            win.setTimeout(cerrar, 1500);
+        else
+            win.addEventListener('load', () => win.setTimeout(cerrar, 1500));
     };
     if (doc.readyState === 'loading')
-        doc.addEventListener('DOMContentLoaded', correr);
+        doc.addEventListener('DOMContentLoaded', empezar);
     else
-        correr();
+        empezar();
     // Dentro del marco, una liga no debe navegar el marco: se abre en otra pestaña.
     if (enMarco) {
         doc.addEventListener('click', (e) => {
