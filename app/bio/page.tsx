@@ -30,7 +30,7 @@ export default function BioPage() {
 
   return (
     <PageShell wide className="py-8 sm:py-20">
-      <header className="mb-8 sm:mb-14">
+      <header className="mb-8 sm:mb-14" data-rtc-seccion="nosotros">
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
             Expediente

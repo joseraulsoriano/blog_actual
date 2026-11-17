@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { SiteNav } from "@/components/site/site-nav";
 import { PrivateUnlock } from "@/components/site/private-unlock";
@@ -45,6 +46,8 @@ export default function RootLayout({
       <body className="crt min-h-full flex flex-col bg-black text-white">
         <SiteNav />
         <PrivateUnlock />
+        {/* «Desprender» de RTC: con ?rtc-seccion=<clave> enseña sólo esa sección (cotizador de rtcsoluciones.mx). Sin el parámetro no hace nada. */}
+        <Script src="/rtc-desprender.js" type="module" strategy="afterInteractive" />
         <main className="flex-1 pb-20 md:pb-24">{children}</main>
       </body>
     </html>
