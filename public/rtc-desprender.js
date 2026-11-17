@@ -54,10 +54,18 @@ export function iniciarDesprender(doc = document, win = window) {
             }
         }
         doc.documentElement.setAttribute('data-rtc-desprendida', clave);
-        doc.body.style.setProperty('margin', '0', 'important');
+        // Los contenedores (main, envoltorios de página, body) pierden su relleno, margen y alto mínimo:
+        // si no, la sección no queda pegada arriba y la altura avisada se queda corta (en el blog, 80 px).
+        for (let n = el.parentElement; n && n !== doc.documentElement; n = n.parentElement) {
+            for (const p of ['padding-top', 'padding-bottom', 'margin-top', 'margin-bottom'])
+                n.style.setProperty(p, '0', 'important');
+            n.style.setProperty('min-height', '0', 'important');
+        }
         el.style.setProperty('margin-top', '0', 'important');
+        el.style.setProperty('margin-bottom', '0', 'important');
         win.scrollTo(0, 0);
-        const medir = () => avisar(Math.ceil(el.getBoundingClientRect().height));
+        // Hasta el borde inferior de la sección, contado desde el inicio del documento.
+        const medir = () => avisar(Math.ceil(el.getBoundingClientRect().bottom + win.scrollY));
         medir();
         if ('ResizeObserver' in win)
             new ResizeObserver(medir).observe(el);
