@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getEntry, getProyectos, type ProyectoMeta } from "@/lib/content";
 import { Prosa } from "@/components/retro/prosa";
 import { PageShell } from "@/components/site/page-shell";
+import { metaPagina } from "@/lib/seo";
+import { jsonLdApp } from "@/lib/apps";
 
 export function generateStaticParams() {
   return getProyectos().map((p) => ({ slug: p.slug }));
@@ -16,7 +18,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const p = getEntry<ProyectoMeta>("proyectos", slug);
   if (!p) return {};
-  return { title: p.data.title, description: p.data.resumen };
+  return metaPagina({
+    title: p.data.title,
+    description: p.data.resumen,
+    path: `/proyectos/${slug}`,
+  });
 }
 
 export default async function ProyectoPage({
@@ -27,9 +33,17 @@ export default async function ProyectoPage({
   const { slug } = await params;
   const p = getEntry<ProyectoMeta>("proyectos", slug);
   if (!p) notFound();
+  const ld = jsonLdApp(slug);
 
   return (
     <PageShell>
+      {ld ? (
+        <script
+          type="application/ld+json"
+          // JSON propio y estático (lib/apps.ts), no contenido del usuario.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ld).replace(/</g, "\\u003c") }}
+        />
+      ) : null}
       <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
         Proyecto · {p.data.año}
         {p.data.origen ? ` · ${p.data.origen}` : ""}

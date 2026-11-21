@@ -28,6 +28,8 @@ export type ProyectoMeta = {
   resumen: string;
   categoria: ProyectoCategoria;
   año: number;
+  /** Mes `yyyy-mm` opcional: desempata dentro del mismo año (lo más reciente primero). */
+  fecha?: string;
   origen?: string;
   enlace?: string;
   /** id original en el portafolio (si viene de allí). */
@@ -141,7 +143,10 @@ export function minutosLectura(texto: string): number {
 
 export function getProyectos() {
   return getCollection<ProyectoMeta>("proyectos").sort(
-    (a, b) => b.data.año - a.data.año
+    (a, b) =>
+      b.data.año - a.data.año ||
+      (b.data.fecha ?? "").localeCompare(a.data.fecha ?? "") ||
+      a.data.title.localeCompare(b.data.title, "es")
   );
 }
 
